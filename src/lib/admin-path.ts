@@ -15,3 +15,12 @@ export function getAdminPath(): string {
   const clean = withSlash.replace(/\/+$/, "").toLowerCase();
   return clean.length > 1 ? clean : "/admin";
 }
+
+export function isValidAdminPath(path: string): boolean {
+  return (
+    path !== "/admin" &&
+    path.length >= 25 &&
+    /^\/[a-z0-9-]+$/.test(path) &&
+    !path.includes("replace-with")
+  );
+}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { getAdminPath } from "@/lib/admin-path";
+import { getAdminPath, isValidAdminPath } from "@/lib/admin-path";
 
 /**
  * Admin routes live internally under /admin. The public entry path is
@@ -21,18 +21,21 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const base = getAdminPath();
 
-  if (
-    process.env.NODE_ENV === "production" &&
-    (base === LEGACY_PREFIX ||
-      base.length < 25 ||
-      !/^\/[a-z0-9-]+$/.test(base) ||
-      base.includes("replace-with"))
-  ) {
-    throw new Error("Set ADMIN_PATH to a unique path with at least 24 lowercase letters/numbers.");
-  }
-
   // Internal 404 trigger route — pass through untouched.
   if (pathname === NOT_FOUND_ROUTE || pathname.startsWith(`${NOT_FOUND_ROUTE}/`)) {
+    return NextResponse.next();
+  }
+
+  if (process.env.NODE_ENV === "production" && !isValidAdminPath(base)) {
+    if (
+      pathname === base ||
+      pathname.startsWith(`${base}/`) ||
+      pathname === LEGACY_PREFIX ||
+      pathname.startsWith(`${LEGACY_PREFIX}/`)
+    ) {
+      return rewrite(req, NOT_FOUND_ROUTE);
+    }
+
     return NextResponse.next();
   }
 
