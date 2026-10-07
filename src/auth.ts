@@ -6,8 +6,12 @@ import { getAdminPath } from "@/lib/admin-path";
 import { rateLimit } from "@/lib/rate-limit";
 
 const authSecret = process.env.NEXTAUTH_SECRET;
-if (process.env.NODE_ENV === "production" && (!authSecret || authSecret.length < 32)) {
-  throw new Error("Set NEXTAUTH_SECRET to a unique value of at least 32 characters in production.");
+
+export function assertAuthSecretConfigured(): void {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (process.env.NODE_ENV === "production" && (!secret || secret.length < 32)) {
+    throw new Error("Set NEXTAUTH_SECRET to a unique value of at least 32 characters in production.");
+  }
 }
 
 declare module "next-auth" {
