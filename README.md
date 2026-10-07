@@ -33,6 +33,8 @@ npm run dev               # http://localhost:3000
 
 Admin panel: **http://localhost:3000{ADMIN_PATH}**. Use a unique, long random `ADMIN_PATH` and the `ADMIN_EMAIL` / `ADMIN_PASSWORD` credentials from `.env`. The example password is intentionally blank; the seed refuses to run without an administrator password of at least 16 characters.
 
+`npm run db:seed` invokes Prisma's seed command so Prisma loads the root `.env`. Set `DATABASE_URL` and `DIRECT_URL` to the intended database, and `ADMIN_EMAIL`/`ADMIN_PASSWORD` to the credentials you want, before running it. The seed updates the stored password hash and also resets the starter profile; run it once for a new production database, not after editing your profile.
+
 ---
 
 ## Architecture
@@ -153,7 +155,7 @@ Never point Preview deployments at the production database. Create a separate Ne
 
 ### 4. Initialize the production admin account
 
-The Vercel build automatically creates/updates database tables; do not run `prisma db push` separately for every deploy. After the first successful deployment, create the admin user and starter profile once from your machine, with the **production** `DATABASE_URL`, `DIRECT_URL`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `.env`:
+The Vercel build automatically creates/updates database tables; do not run `prisma db push` separately for every deploy. After the first successful deployment, create the admin user and starter profile once from your machine. Put the **production** `DATABASE_URL` (pooled), `DIRECT_URL` (direct), `ADMIN_EMAIL`, and the exact `ADMIN_PASSWORD` you want to use into your local root `.env`, then run:
 
 ```bash
 npm run db:seed
