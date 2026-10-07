@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Self-hosted fontsource variable fonts (imported in layout.tsx). */
+    --font-sans: "Inter Variable", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-[#050505] text-zinc-300 antialiased;
+  }
+
+  ::selection {
+    background: rgba(0, 255, 102, 0.25);
+    color: #ffffff;
+  }
+
+  /* Terminal-style scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border: 2px solid #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+}
+
+@layer components {
+  /* ── Typography helpers ─────────────────────────────── */
+  .text-glow {
+    text-shadow:
+      0 0 12px rgba(0, 255, 102, 0.45),
+      0 0 40px rgba(0, 255, 102, 0.15);
+  }
+
+  /* ── Section heading with terminal prompt ───────────── */
+  .section-label {
+    @apply font-mono text-micro uppercase text-zinc-500 tracking-[0.18em];
+  }
+
+  /* ── Tag chip ───────────────────────────────────────── */
+  .tag-chip {
+    @apply inline-flex items-center border border-zinc-800 bg-black/40 px-2 py-0.5 font-mono text-[11px] text-zinc-400;
+  }
+
+  /* ── Buttons ────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 border border-[#00FF66]/60 bg-[#00FF66]/10 px-5 py-2.5 font-mono text-sm text-[#00FF66] transition-colors hover:bg-[#00FF66]/20 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 border border-zinc-800 bg-black/40 px-5 py-2.5 font-mono text-sm text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 border border-red-900/60 bg-red-950/30 px-4 py-2 font-mono text-sm text-red-400 transition-colors hover:bg-red-950/60;
+  }
+
+  /* ── Form fields (admin) ────────────────────────────── */
+  .input-dark {
+    @apply w-full border border-zinc-800 bg-black/60 px-3 py-2 font-mono text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-[#00FF66]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00FF66];
+  }
+
+  .label-dark {
+    @apply mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500;
+  }
+
+  .card-dark {
+    @apply border border-zinc-800 bg-[#0a0a0a];
+  }
+
+  /* ── Grid backdrop for hero sections ────────────────── */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(rgba(0, 255, 102, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 102, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ── Markdown article body ──────────────────────────── */
+  .prose-dark {
+    @apply text-zinc-300 leading-relaxed;
+  }
+  .prose-dark h2 {
+    @apply mt-10 mb-4 border-b border-zinc-800 pb-2 font-mono text-xl text-white;
+  }
+  .prose-dark h3 {
+    @apply mt-8 mb-3 font-mono text-lg text-zinc-100;
+  }
+  .prose-dark p {
+    @apply my-4;
+  }
+  .prose-dark a {
+    @apply text-[#00FF66] underline decoration-[#00FF66]/30 underline-offset-4 hover:decoration-[#00FF66];
+  }
+  .prose-dark strong {
+    @apply text-white;
+  }
+  .prose-dark ul {
+    @apply my-4 list-disc space-y-1.5 pl-6;
+  }
+  .prose-dark ol {
+    @apply my-4 list-decimal space-y-1.5 pl-6;
+  }
+  .prose-dark li {
+    @apply pl-1;
+  }
+  .prose-dark code {
+    @apply border border-zinc-800 bg-black px-1.5 py-0.5 font-mono text-[0.85em] text-[#00FF66];
+  }
+  .prose-dark pre {
+    @apply my-5 overflow-x-auto border border-zinc-800 bg-black p-4;
+  }
+  .prose-dark pre code {
+    @apply border-0 bg-transparent p-0 text-zinc-300;
+  }
+  .prose-dark blockquote {
+    @apply my-5 border-l-2 border-[#00FF66]/50 bg-[#00FF66]/5 px-4 py-2 text-zinc-400 italic;
+  }
+  .prose-dark img {
+    @apply my-6 border border-zinc-800;
+  }
+  .prose-dark hr {
+    @apply my-8 border-zinc-800;
+  }
+  .prose-dark table {
+    @apply my-6 w-full border-collapse font-mono text-sm;
+  }
+  .prose-dark th {
+    @apply border border-zinc-800 bg-black px-3 py-2 text-left text-zinc-400;
+  }
+  .prose-dark td {
+    @apply border border-zinc-800 px-3 py-2;
+  }
+}

@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon/serverless Postgres: DATABASE_URL should be the POOLED connection
+  // string (-pooler host) for runtime queries, while DIRECT_URL (non-pooled)
+  // is used for migrations and `prisma db push`. Locally both can be equal.
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Admin auth
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String   @default("Administrator")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+// Global profile — single row (id = "default"), drives the
+// whole public site: hero, about, contact, footer
+// ─────────────────────────────────────────────────────────────
+
+model Profile {
+  id             String   @id @default("default")
+  fullName       String   @default("Your Name")
+  alias          String?  // e.g. "zer0cool" — shown in the logo/terminal
+  title          String   @default("Full-Stack Developer")
+  shortBio       String   @default("")
+  longBio        String   @default("") // supports basic markdown
+  email          String   @default("")
+  phone          String?
+  location       String?
+  avatarUrl      String?
+  resumeUrl      String?
+  seoTitle       String?
+  seoDescription String?
+  available      Boolean  @default(true) // "open to work" badge
+  updatedAt      DateTime @updatedAt
+
+  socialLinks SocialLink[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// Social links — fully CRUD-able, ordered
+// ─────────────────────────────────────────────────────────────
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  label     String // e.g. "GitHub"
+  url       String
+  iconKey   String   @default("link") // lucide icon key: github, linkedin, twitter...
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  profileId String   @default("default")
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, order])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Projects
+// ─────────────────────────────────────────────────────────────
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String        @default("") // card summary
+  content     String        @default("") // detail page, markdown
+  imageUrl    String?
+  repoUrl     String?
+  demoUrl     String?
+  tags        String        @default("[]") // JSON string[]
+  featured    Boolean       @default(false)
+  status      PublishStatus @default(DRAFT)
+  year        String? // "2026"
+  order       Int           @default(0)
+  views       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+// Skills — grouped by category on /about
+// ─────────────────────────────────────────────────────────────
+
+model Skill {
+  id        String      @id @default(cuid())
+  name      String
+  category  SkillCategory @default(BACKEND)
+  level     Int         @default(80) // 0–100
+  iconKey   String? // optional lucide/devicon key
+  order     Int         @default(0)
+  isVisible Boolean     @default(true)
+  createdAt DateTime    @default(now())
+}
+
+// ─────────────────────────────────────────────────────────────
+// Articles (blog)
+// ─────────────────────────────────────────────────────────────
+
+model Article {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  excerpt     String        @default("")
+  content     String        @default("") // markdown
+  coverUrl    String?
+  tags        String        @default("[]") // JSON string[]
+  status      PublishStatus @default(DRAFT)
+  publishedAt DateTime?
+  views       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+// Contact inbox
+// ─────────────────────────────────────────────────────────────
+
+model Message {
+  id        String       @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  body      String
+  status    MessageState @default(UNREAD)
+  createdAt DateTime     @default(now())
+}
+
+model RateLimitBucket {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Lightweight analytics for the admin dashboard
+// ─────────────────────────────────────────────────────────────
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  createdAt DateTime @default(now())
+
+  @@index([path, createdAt])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  SECURITY
+  IOT
+  TOOLS
+}
+
+enum MessageState {
+  UNREAD
+  READ
+  ARCHIVED
+}

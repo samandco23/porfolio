@@ -1,0 +1,30 @@
+import Link from "next/link";
+
+export const metadata = { title: "404 — Not found" };
+
+export default function NotFound() {
+  return (
+    <div className="grid-backdrop flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
+      <p className="font-mono text-xs uppercase tracking-widest text-zinc-600">
+        error — signal lost
+      </p>
+      <h1 className="mt-4 font-mono text-7xl text-white md:text-8xl">
+        4<span className="text-[#00FF66] text-glow">0</span>4
+      </h1>
+      <p className="mt-5 max-w-md font-mono text-sm leading-relaxed text-zinc-500">
+        {"// this route does not exist or has been decommissioned."}
+      </p>
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+        <Link href="/" className="btn-primary">
+          Return home
+        </Link>
+        <Link
+          href="/projects"
+          className="border border-zinc-800 px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+        >
+          View projects
+        </Link>
+      </div>
+    </div>
+  );
+}
