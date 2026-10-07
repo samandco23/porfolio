@@ -21,8 +21,8 @@ cp .env.example .env
 #   → set DATABASE_URL, DIRECT_URL, NEXTAUTH_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_PATH
 #   → generate secrets with: openssl rand -base64 32
 
-# 3. Create the database schema
-npx prisma db push        # or: npm run db:migrate
+# 3. Create/update the database schema
+npm run db:push            # run once for a new local/production database
 
 # 4. Create the admin account and personal profile
 npm run db:seed
@@ -134,8 +134,8 @@ The `portfolio/` folder must be the **deploy root**. Two options:
 
 1. [vercel.com/new](https://vercel.com/new) → import the GitHub repo.
 2. **Root Directory:** `portfolio` (only for option B monorepo).
-3. **Build command** stays `npm run build` — it already runs `prisma generate && next build`.
-4. Add the environment variables (Production + Preview):
+3. Set the **Build Command** to `npm run vercel-build`. It generates Prisma Client, applies the Prisma schema with `prisma db push`, then builds Next.js. A schema/database error fails the deployment instead of publishing code that cannot use its database.
+4. Add the environment variables for **Production**:
 
    | Variable | Value |
    | --- | --- |
@@ -144,23 +144,31 @@ The `portfolio/` folder must be the **deploy root**. Two options:
    | `NEXTAUTH_URL` | `https://your-app.vercel.app` (or custom domain) |
    | `NEXTAUTH_SECRET` | Unique output of `openssl rand -base64 32` |
    | `ADMIN_PATH` | A unique path, e.g. `/panel-` + 32 random hex characters |
-   | `ADMIN_EMAIL` | `berlinkoueni25@gmail.com` (or another admin address you control) |
-   | `ADMIN_PASSWORD` | Unique password of at least 16 characters (seed only) |
    | `NEXT_PUBLIC_SITE_URL` | `https://your-app.vercel.app` |
    | `NEXT_PUBLIC_SITE_NAME` | your site name |
 
-### 4. Initialize the production database
+`ADMIN_EMAIL` and `ADMIN_PASSWORD` are needed only in your local `.env` when you run the one-time seed; do not put them in Vercel.
 
-After the first deploy, run once from your machine:
+Never point Preview deployments at the production database. Create a separate Neon branch/database for Preview, then set `DATABASE_URL` and `DIRECT_URL` for the **Preview** environment to that separate database. The Vercel build applies the schema to the database selected by the current environment.
+
+### 4. Initialize the production admin account
+
+The Vercel build automatically creates/updates database tables; do not run `prisma db push` separately for every deploy. After the first successful deployment, create the admin user and starter profile once from your machine, with the **production** `DATABASE_URL`, `DIRECT_URL`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `.env`:
 
 ```bash
-# .env pointed at Neon, with all required secrets set
-npx prisma db push
 npm run db:seed
 ```
 
 The seed is idempotent and does not add sample content. Re-running it updates the configured admin password and resets the profile's identity, contact details, and starter biography to the values above.
 If this database was previously seeded with demo data, remove the example projects, articles, skills, and social links from the admin dashboard before publishing; the new seed does not delete existing data.
+
+To apply the schema manually from a terminal, first set `DATABASE_URL` and `DIRECT_URL` in the project-root `.env` to the intended database, then run:
+
+```bash
+npm run db:push
+```
+
+This is equivalent to `npx prisma db push`. It changes the database named by those URLs, so verify that they point to the intended environment first. `.env` is local and must never be committed.
 
 ### 5. Verify
 
