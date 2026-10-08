@@ -20,7 +20,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:translations": "prisma db seed -- --translations-only",
-    "db:moments": "prisma db seed -- --moments-only"
+    "db:moments": "prisma db seed -- --moments-only",
+    "db:articles": "prisma db seed -- --articles-only"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

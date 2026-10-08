@@ -233,13 +233,15 @@ This is equivalent to `npx prisma db push`. It changes the database named by tho
 
 ### Profil Berlin Koueni et contenu administrable
 
-Le seeder contient le profil fourni, dix projets publiés (Guidtwam, FON KOUENI ERP et E-Commerce Platform sont mis en avant), les compétences regroupées par domaine, treize technologies pour la stack principale et les liens GitHub/LinkedIn fournis. Aucun niveau de maîtrise, date de réalisation, lien de démonstration ou résultat chiffré n'est inventé.
+Le seeder contient le profil fourni, dix projets publiés (Guidtwam, FON KOUENI ERP et E-Commerce Platform sont mis en avant), neuf articles techniques publiés, les compétences regroupées par domaine, treize technologies pour la stack principale et les liens GitHub/LinkedIn fournis. Aucun niveau de maîtrise, date de réalisation, lien de démonstration ou résultat chiffré n'est inventé.
 
 Après modification du schéma : `npm run db:push`, puis `npm run db:seed`. Le seeder utilise une transaction et des upserts : il ne supprime pas les projets personnalisés, articles, messages ou médias existants. Une nouvelle exécution remet les champs éditoriaux du profil, des dix projets et des compétences fournis à leurs valeurs du seeder. Les textes du site déjà enregistrés sont préservés. Le mot de passe du compte ADMIN_EMAIL est synchronisé avec ADMIN_PASSWORD.
 
 Dans **Profile & Settings**, modifier l'identité, la marque, l'URL publique HTTPS, la tagline, les spécialités, les biographies, les coordonnées, l'avatar, le CV et le SEO global. La section **Public site content** permet de rechercher et modifier les intitulés de navigation, titres, boutons, textes de contact, noms des catégories, métadonnées des pages, langue et note de pied de page. Les projets, articles, réseaux sociaux et compétences conservent leurs éditeurs dédiés. L'ordre, la visibilité et la sélection **Main stack on homepage** se règlent dans Skills. Un niveau vide masque le pourcentage et sa barre.
 
 Une sauvegarde dans le panel invalide immédiatement le cache public. Après un seed lancé en ligne de commande, redémarrer le serveur local ou attendre l'expiration du cache public (cinq minutes). Les secrets de connexion et paramètres d'hébergement restent dans l'environnement serveur.
+
+Pour ajouter uniquement les articles, lancer `npm run db:articles`. Les neuf guides couvrent Laravel, React/Next.js, React Native/Expo, PostgreSQL, Docker/CI/CD, la sécurité des APIs, Linux/Nginx, Active Directory et UI/UX. Ils sont publiés en français avec une traduction anglaise, puis modifiables depuis **Articles** et **Content translations**. Les relances ajoutent seulement les articles manquants et préservent les modifications éditoriales existantes.
 
 ### Événements, souvenirs et galerie
 

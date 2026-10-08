@@ -2,11 +2,13 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { seedTranslations } from "./translations";
 import { profileContent, projectsContent, skillsContent } from "./content";
+import { articlesContent } from "./articles";
 import { DEFAULT_SITE_CONTENT } from "../src/lib/site-content";
 
-const prisma = new PrismaClient((process.argv.includes("--translations-only") || process.argv.includes("--moments-only")) && process.env.DIRECT_URL ? { datasources: { db: { url: process.env.DIRECT_URL } } } : undefined);
+const prisma = new PrismaClient((process.argv.includes("--translations-only") || process.argv.includes("--moments-only") || process.argv.includes("--articles-only")) && process.env.DIRECT_URL ? { datasources: { db: { url: process.env.DIRECT_URL } } } : undefined);
 async function main() {
   if (process.argv.includes("--moments-only")) { const { updateMoments } = await import("./update-moments"); await updateMoments(prisma); return; }
+  if (process.argv.includes("--articles-only")) { const { updateArticles } = await import("./update-articles"); await updateArticles(prisma); return; }
   if (process.argv.includes("--translations-only")) {
     const { updateTranslations } = await import("./update-translations");
     await updateTranslations(prisma);
@@ -17,17 +19,18 @@ async function main() {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Set a valid ADMIN_EMAIL.");
   if (!password || password.length < 16) throw new Error("ADMIN_PASSWORD requires at least 16 characters.");
   if (process.argv.includes("--verify-only")) {
-    const [profile, projects, skills, links, content, moments] = await Promise.all([
+    const [profile, projects, skills, links, content, moments, articles] = await Promise.all([
       prisma.profile.findUnique({ where: { id: "default" }, select: { fullName: true, title: true, siteName: true } }),
       prisma.project.findMany({ where: { slug: { in: projectsContent.map((project) => project.slug) } }, select: { slug: true, status: true, featured: true } }),
       prisma.skill.findMany({ select: { name: true, category: true, featured: true } }),
       prisma.socialLink.findMany({ where: { profileId: "default", isVisible: true }, select: { label: true, url: true } }),
       prisma.siteContent.count({ where: { id: "default" } }),
       prisma.moment.count(),
+      prisma.article.findMany({ where: { slug: { in: articlesContent.map((article) => article.slug) } }, select: { slug: true, status: true } }),
     ]);
     const seededSkills = skillsContent.filter((expected) => skills.some((actual) => actual.name === expected.name && actual.category === expected.category));
-    if (!profile || profile.fullName !== profileContent.fullName || projects.length !== projectsContent.length || projects.some((project) => project.status !== "PUBLISHED") || seededSkills.length !== skillsContent.length || content !== 1) throw new Error("Seed verification failed");
-    console.log(JSON.stringify({ profile, publishedSeedProjects: projects.length, featuredSeedProjects: projects.filter((project) => project.featured).length, seededSkills: seededSkills.length, mainStack: skills.filter((skill) => skill.featured).length, socialLinks: links, editableSiteContent: content === 1, moments }, null, 2));
+    if (!profile || profile.fullName !== profileContent.fullName || projects.length !== projectsContent.length || projects.some((project) => project.status !== "PUBLISHED") || seededSkills.length !== skillsContent.length || content !== 1 || articles.length !== articlesContent.length) throw new Error("Seed verification failed");
+    console.log(JSON.stringify({ profile, publishedSeedProjects: projects.length, featuredSeedProjects: projects.filter((project) => project.featured).length, seededSkills: seededSkills.length, mainStack: skills.filter((skill) => skill.featured).length, socialLinks: links, editableSiteContent: content === 1, moments, seededArticles: articles.length, publishedSeedArticles: articles.filter((article) => article.status === "PUBLISHED").length }, null, 2));
     return;
   }
   const passwordHash = await bcrypt.hash(password, 12);
@@ -66,7 +69,9 @@ async function main() {
   await prisma.siteContent.update({ where: { id: "default" }, data: { data: { ...DEFAULT_SITE_CONTENT, ...seedTranslations(profile, projects), ...current } } });
   const { updateMoments } = await import("./update-moments");
   await updateMoments(prisma);
-  console.log(`Seed complete: Berlin Koueni, ${projectsContent.length} published projects (${projectsContent.filter((p) => p.featured).length} featured), ${skillsContent.length} skills (${skillsContent.filter((s) => s.featured).length} in main stack), GitHub and LinkedIn.`);
+  const { updateArticles } = await import("./update-articles");
+  await updateArticles(prisma);
+  console.log(`Seed complete: Berlin Koueni, ${projectsContent.length} published projects (${projectsContent.filter((p) => p.featured).length} featured), ${skillsContent.length} skills (${skillsContent.filter((s) => s.featured).length} in main stack), ${articlesContent.length} article topics, GitHub and LinkedIn.`);
 }
 main().catch((error: unknown) => {
   // Avoid leaking database credentials in provider error messages.
