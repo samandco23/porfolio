@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 import { parseTags } from "@/lib/utils";
 import { getAdminPath } from "@/lib/admin-path";
 import { ProjectEditor } from "../project-editor";
+import { imageUploadConfigured } from "@/lib/integrations";
+import { parseProjectContent } from "@/lib/project-content";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 
   const project = await prisma.project.findUnique({ where: { id } });
   if (!project) notFound();
+  const { content, details } = parseProjectContent(project.content);
 
   return (
     <div className="max-w-4xl">
@@ -27,12 +30,12 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
           <ArrowLeft className="h-3.5 w-3.5" /> back to projects
         </Link>
         <a
-          href={`/projects/${project.slug}`}
+          href={project.status === "DRAFT" ? `${base}/projects/${project.id}/preview` : `/projects/${project.slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className="font-mono text-xs text-zinc-600 hover:text-[#00FF66]"
         >
-          view public page →
+          {project.status === "DRAFT" ? "preview draft →" : "view public page →"}
         </a>
       </div>
 
@@ -41,12 +44,15 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 
       <div className="mt-8">
         <ProjectEditor
+          adminBase={base}
+          uploadEnabled={imageUploadConfigured()}
           project={{
             id: project.id,
             title: project.title,
             slug: project.slug,
             description: project.description,
-            content: project.content,
+            content,
+            ...details,
             imageUrl: project.imageUrl,
             repoUrl: project.repoUrl,
             demoUrl: project.demoUrl,

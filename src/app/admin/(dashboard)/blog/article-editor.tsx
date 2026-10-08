@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -8,6 +9,7 @@ import { articleSchema, type ArticleInput } from "@/lib/validators";
 import { saveArticle } from "@/lib/actions/admin";
 import { slugify } from "@/lib/utils";
 import { Field } from "@/app/admin/(dashboard)/settings/profile-form";
+import { ImageUpload } from "@/app/admin/_components/image-upload";
 
 type ActionState = { ok: boolean; message: string; errors: Record<string, string> };
 
@@ -23,7 +25,10 @@ export type ArticleRecord = {
   publishedAt: string | null; // datetime-local string
 };
 
-export function ArticleEditor({ article }: { article?: ArticleRecord }) {
+export function ArticleEditor({ article, uploadEnabled = false, adminBase }: {
+  article?: ArticleRecord; uploadEnabled?: boolean; adminBase: string;
+}) {
+  const router = useRouter();
   const [state, setState] = useState<ActionState>({ ok: false, message: "", errors: {} });
   const [pending, startTransition] = useTransition();
 
@@ -72,7 +77,16 @@ export function ArticleEditor({ article }: { article?: ArticleRecord }) {
     fd.append("publishedAt", values.publishedAt ?? "");
     if (article?.id) fd.append("id", article.id);
 
-    startTransition(async () => setState(await saveArticle({ ok: false, message: "", errors: {} }, fd)));
+    startTransition(async () => {
+      try {
+        const result = await saveArticle({ ok: false, message: "", errors: {} }, fd);
+        setState(result);
+        if (result.ok && result.id && !article?.id) router.replace(`${adminBase}/blog/${result.id}`);
+        else if (result.ok) router.refresh();
+      } catch {
+        setState({ ok: false, message: "Could not save. Check your connection and sign in again if needed.", errors: {} });
+      }
+    });
   };
 
   return (
@@ -107,6 +121,7 @@ export function ArticleEditor({ article }: { article?: ArticleRecord }) {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Cover image URL" error={state.errors?.coverUrl ?? errors.coverUrl?.message}>
             <input className="input-dark" placeholder="https://..." {...register("coverUrl")} />
+            <ImageUpload enabled={uploadEnabled} onUploaded={(url) => setValue("coverUrl", url, { shouldDirty: true, shouldValidate: true })} />
           </Field>
           <Field label="Tags" hint="Comma-separated, max 12.">
             <input className="input-dark" placeholder="security, osint" {...register("tags")} />
@@ -120,7 +135,7 @@ export function ArticleEditor({ article }: { article?: ArticleRecord }) {
               <option value="PUBLISHED">Published</option>
             </select>
           </Field>
-          <Field label="Publish date" hint="Defaults to now on first publish.">
+          <Field label="Publish date" hint="Defaults to now on first publish." error={state.errors?.publishedAt ?? errors.publishedAt?.message}>
             <input type="datetime-local" className="input-dark" {...register("publishedAt")} />
           </Field>
         </div>
@@ -130,8 +145,9 @@ export function ArticleEditor({ article }: { article?: ArticleRecord }) {
         <button type="submit" disabled={pending} className="btn-primary">
           <Save className="h-4 w-4" /> {pending ? "Saving..." : "Save article"}
         </button>
+        {article?.id && <a href={`${adminBase}/blog/${article.id}/preview`} target="_blank" rel="noopener noreferrer" className="btn-ghost">Preview saved version</a>}
         {state.message && (
-          <p className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
             {state.ok ? "✓ " : "✗ "}
             {state.message}
           </p>

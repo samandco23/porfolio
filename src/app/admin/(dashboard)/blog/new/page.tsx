@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getAdminPath } from "@/lib/admin-path";
 import { ArticleEditor } from "../article-editor";
+import { imageUploadConfigured } from "@/lib/integrations";
 
 export const metadata = { title: "Admin — New article" };
 
@@ -18,7 +19,7 @@ export default function NewArticlePage() {
       </Link>
       <h1 className="mt-6 font-mono text-2xl text-white">New article</h1>
       <div className="mt-8">
-        <ArticleEditor />
+        <ArticleEditor adminBase={base} uploadEnabled={imageUploadConfigured()} />
       </div>
     </div>
   );

@@ -34,6 +34,10 @@ model Profile {
   fullName       String   @default("Your Name")
   alias          String?  // e.g. "zer0cool" — shown in the logo/terminal
   title          String   @default("Full-Stack Developer")
+  siteName       String   @default("Portfolio")
+  siteUrl        String?
+  tagline        String   @default("")
+  specialties    String   @default("")
   shortBio       String   @default("")
   longBio        String   @default("") // supports basic markdown
   email          String   @default("")
@@ -97,7 +101,8 @@ model Skill {
   id        String      @id @default(cuid())
   name      String
   category  SkillCategory @default(BACKEND)
-  level     Int         @default(80) // 0–100
+  level     Int?        // Optional self-assessment, 0–100
+  featured  Boolean     @default(false)
   iconKey   String? // optional lucide/devicon key
   order     Int         @default(0)
   isVisible Boolean     @default(true)
@@ -167,6 +172,17 @@ enum PublishStatus {
 }
 
 enum SkillCategory {
+  LANGUAGES
+  MOBILE
+  DATABASE
+  API
+  ARCHITECTURE
+  DEVOPS
+  CLOUD
+  SYSTEMS
+  NETWORKING
+  DESIGN
+  AI
   FRONTEND
   BACKEND
   SECURITY
@@ -178,4 +194,39 @@ enum MessageState {
   UNREAD
   READ
   ARCHIVED
+}
+
+// Editable public interface copy, labels, navigation and page metadata.
+model SiteContent {
+  id        String   @id @default("default")
+  data      Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}
+
+// Events, memories and photo albums share the same editorial workflow.
+model Moment {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  kind        MomentKind    @default(MEMORY)
+  description String        @default("")
+  content     String        @default("")
+  date        String?       // Calendar date (YYYY-MM-DD), no timezone conversion
+  location    String?
+  album       String?
+  coverUrl    String?
+  images      String        @default("[]") // JSON { url, caption }[]
+  status      PublishStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status, order])
+}
+
+enum MomentKind {
+  EVENT
+  MEMORY
+  GALLERY
 }

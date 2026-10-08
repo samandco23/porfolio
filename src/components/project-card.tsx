@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ExternalLink, FolderGit2, Star } from "lucide-react";
 import { TagList } from "@/components/tag-list";
 
@@ -17,8 +17,9 @@ type ProjectCardProject = {
 };
 
 export function ProjectCard({ project }: { project: ProjectCardProject }) {
+  const reduceMotion = useReducedMotion();
   return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} className="h-full">
+    <motion.div whileHover={reduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }} className="h-full">
       <Link
         href={`/projects/${project.slug}`}
         className="group relative flex h-full flex-col border border-zinc-800 bg-[#0a0a0a] transition-colors duration-300 hover:border-[#00FF66]/50 hover:shadow-[0_0_30px_rgba(0,255,102,0.07)]"
@@ -29,6 +30,8 @@ export function ProjectCard({ project }: { project: ProjectCardProject }) {
               src={project.imageUrl}
               alt={project.title}
               fill
+              // Admin image URLs can use any host; load directly until an asset host is configured.
+              unoptimized
               sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover opacity-80 transition-opacity group-hover:opacity-100"
             />

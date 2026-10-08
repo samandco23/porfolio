@@ -1,4 +1,5 @@
 import { Github, Linkedin, Twitter, Mail, Globe, Link2 } from "lucide-react";
+import { SiteText } from "@/components/site-content";
 import { getProfile } from "@/lib/queries";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -23,8 +24,7 @@ export async function SiteFooter({
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="font-mono text-xs text-zinc-600">
           <span className="text-zinc-500">© {year} {name}</span>
-          <span className="mx-2 text-zinc-800">{"//"}</span>
-          <span>Built with Next.js — all content served from a database</span>
+          <p className="mt-2"><SiteText name="site.footerNote" /></p>
         </div>
 
         <div className="flex items-center gap-3">

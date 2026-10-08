@@ -82,7 +82,9 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
                 {link.url}
               </a>
               <span className="font-mono text-[10px] text-zinc-700">#{link.order}</span>
-              <form action={deleteSocialLink}>
+              <form action={deleteSocialLink} onSubmit={(event) => {
+                if (!window.confirm(`Delete the ${link.label} link? This cannot be undone.`)) event.preventDefault();
+              }}>
                 <input type="hidden" name="id" value={link.id} />
                 <button
                   type="submit"

@@ -5,10 +5,13 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { contactSchema, zodFieldErrors } from "@/lib/validators";
 import { rateLimit } from "@/lib/rate-limit";
+import { getAdminPath } from "@/lib/admin-path";
+import { notifyContactMessage } from "@/lib/contact-notifications";
 
 export type ContactFormState = {
   ok: boolean;
   message: string;
+  messageKey?: string;
   errors: Record<string, string>;
 };
 
@@ -34,6 +37,7 @@ export async function submitContactMessage(
   if (!ip) {
     return {
       ok: false,
+      messageKey: "contact.connection",
       message: "We couldn't verify your connection. Please use the email address shown on this page.",
       errors: {},
     };
@@ -42,6 +46,7 @@ export async function submitContactMessage(
   if (!ok) {
     return {
       ok: false,
+      messageKey: "contact.rateLimit",
       message: "Too many messages. Please try again later.",
       errors: {},
     };
@@ -57,12 +62,13 @@ export async function submitContactMessage(
   if (!parsed.success) {
     return {
       ok: false,
+      messageKey: "contact.validation",
       message: "Please fix the highlighted fields.",
       errors: zodFieldErrors(parsed.error),
     };
   }
 
-  await prisma.message.create({
+  const message = await prisma.message.create({
     data: {
       name: parsed.data.name,
       email: parsed.data.email,
@@ -71,6 +77,9 @@ export async function submitContactMessage(
     },
   });
 
-  revalidatePath("/admin");
+  await notifyContactMessage(message);
+
+  revalidatePath(getAdminPath());
+  revalidatePath(`${getAdminPath()}/messages`);
   return { ok: true, message: "Message sent — I'll get back to you soon.", errors: {} };
 }

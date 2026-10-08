@@ -13,12 +13,14 @@ export function AdminSidebarMobile({ items }: { items: { href: string; label: st
         onClick={() => setOpen((v) => !v)}
         className="fixed bottom-5 right-5 z-50 border border-[#00FF66]/50 bg-[#0a0a0a] p-3 text-[#00FF66] shadow-lg"
         aria-label="Admin menu"
+        aria-expanded={open}
+        aria-controls="admin-mobile-navigation"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
       {open && (
-        <div className="fixed inset-x-0 bottom-20 z-40 mx-5 border border-zinc-800 bg-[#0a0a0a] p-3 shadow-2xl">
+        <nav id="admin-mobile-navigation" aria-label="Administration" className="fixed inset-x-0 bottom-20 z-40 mx-5 border border-zinc-800 bg-[#0a0a0a] p-3 shadow-2xl">
           {items.map((item) => (
             <Link
               key={item.href}
@@ -29,7 +31,7 @@ export function AdminSidebarMobile({ items }: { items: { href: string; label: st
               {item.label}
             </Link>
           ))}
-        </div>
+        </nav>
       )}
     </div>
   );

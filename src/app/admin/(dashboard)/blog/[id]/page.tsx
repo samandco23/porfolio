@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { parseTags, toDateTimeLocalValue } from "@/lib/utils";
 import { getAdminPath } from "@/lib/admin-path";
 import { ArticleEditor } from "../article-editor";
+import { imageUploadConfigured } from "@/lib/integrations";
 
 export const dynamic = "force-dynamic";
 
@@ -27,12 +28,12 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
           <ArrowLeft className="h-3.5 w-3.5" /> back to articles
         </Link>
         <a
-          href={`/blog/${article.slug}`}
+          href={article.status === "DRAFT" ? `${base}/blog/${article.id}/preview` : `/blog/${article.slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className="font-mono text-xs text-zinc-600 hover:text-[#00FF66]"
         >
-          view public page →
+          {article.status === "DRAFT" ? "preview draft →" : "view public page →"}
         </a>
       </div>
 
@@ -41,6 +42,8 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
 
       <div className="mt-8">
         <ArticleEditor
+          adminBase={base}
+          uploadEnabled={imageUploadConfigured()}
           article={{
             id: article.id,
             title: article.title,

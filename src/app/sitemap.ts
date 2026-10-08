@@ -1,17 +1,19 @@
+import { connection } from "next/server";
 import type { MetadataRoute } from "next";
-import { getPublishedArticleSlugs, getPublishedProjectSlugs } from "@/lib/queries";
+import { getPublishedArticleSlugs, getPublishedProjectSlugs, getProfile, getPublishedMoments } from "@/lib/queries";
 import { getSiteUrl } from "@/lib/site-url";
 
-export const dynamic = "force-dynamic";
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = getSiteUrl();
-  const [projects, articles] = await Promise.all([
+  await connection();
+  const profile = await getProfile();
+  const siteUrl = profile?.siteUrl ? new URL(profile.siteUrl) : getSiteUrl();
+  const [projects, articles, moments] = await Promise.all([
     getPublishedProjectSlugs(),
     getPublishedArticleSlugs(),
+    getPublishedMoments(),
   ]);
 
-  const pages: MetadataRoute.Sitemap = ["", "/about", "/projects", "/blog", "/contact"].map(
+  const pages: MetadataRoute.Sitemap = ["", "/about", "/projects", "/blog", "/moments", "/contact"].map(
     (path) => ({
       url: new URL(path, siteUrl).toString(),
     }),
@@ -19,11 +21,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...pages,
-    ...projects.map(({ slug }) => ({
+    ...moments.map(({ slug, updatedAt }) => ({ url: new URL(`/moments/${encodeURIComponent(slug)}`, siteUrl).toString(), lastModified: updatedAt })),
+    ...projects.map(({ slug, updatedAt }) => ({
       url: new URL(`/projects/${encodeURIComponent(slug)}`, siteUrl).toString(),
+      lastModified: updatedAt,
     })),
-    ...articles.map(({ slug }) => ({
+    ...articles.map(({ slug, updatedAt }) => ({
       url: new URL(`/blog/${encodeURIComponent(slug)}`, siteUrl).toString(),
+      lastModified: updatedAt,
     })),
   ];
 }

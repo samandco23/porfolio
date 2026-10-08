@@ -1,5 +1,7 @@
 "use client";
 
+import { SiteText, useSiteContent } from "@/components/site-content";
+
 import { useFormState } from "react-dom";
 import { Send } from "lucide-react";
 import { submitContactMessage, type ContactFormState } from "@/lib/actions/public";
@@ -8,6 +10,7 @@ import { Reveal } from "@/components/motion/reveal";
 const initialState: ContactFormState = { ok: false, message: "", errors: {} };
 
 export function ContactForm() {
+  const content = useSiteContent();
   const [state, formAction, pending] = useFormState(submitContactMessage, initialState);
 
   return (
@@ -15,9 +18,7 @@ export function ContactForm() {
       <form action={formAction} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor="name" className="label-dark">
-              Name *
-            </label>
+            <label htmlFor="name" className="label-dark"> <SiteText name="app.contact.contact-form.1" /> </label>
             <input
               id="name"
               name="name"
@@ -25,16 +26,14 @@ export function ContactForm() {
               autoComplete="name"
               required
               className="input-dark"
-              placeholder="Ada Lovelace…"
+              placeholder={content["contact.namePlaceholder"]}
             />
             {state.errors?.name && (
               <p className="mt-1 font-mono text-xs text-red-400">{state.errors.name}</p>
             )}
           </div>
           <div>
-            <label htmlFor="email" className="label-dark">
-              Email *
-            </label>
+            <label htmlFor="email" className="label-dark"> <SiteText name="app.contact.contact-form.2" /> </label>
             <input
               id="email"
               name="email"
@@ -43,7 +42,7 @@ export function ContactForm() {
               spellCheck={false}
               required
               className="input-dark"
-              placeholder="you@domain.com…"
+              placeholder={content["contact.emailPlaceholder"]}
             />
             {state.errors?.email && (
               <p className="mt-1 font-mono text-xs text-red-400">{state.errors.email}</p>
@@ -52,23 +51,19 @@ export function ContactForm() {
         </div>
 
         <div>
-          <label htmlFor="subject" className="label-dark">
-            Subject
-          </label>
+          <label htmlFor="subject" className="label-dark"> <SiteText name="app.contact.contact-form.3" /> </label>
           <input
             id="subject"
             name="subject"
             type="text"
             autoComplete="off"
             className="input-dark"
-            placeholder="Project inquiry…"
+            placeholder={content["contact.subjectPlaceholder"]}
           />
         </div>
 
         <div>
-          <label htmlFor="body" className="label-dark">
-            Message *
-          </label>
+          <label htmlFor="body" className="label-dark"> <SiteText name="app.contact.contact-form.4" /> </label>
           <textarea
             id="body"
             name="body"
@@ -76,7 +71,7 @@ export function ContactForm() {
             required
             rows={6}
             className="input-dark resize-y"
-            placeholder="Tell me about your project…"
+            placeholder={content["contact.bodyPlaceholder"]}
           />
           {state.errors?.body && (
             <p className="mt-1 font-mono text-xs text-red-400">{state.errors.body}</p>
@@ -85,14 +80,14 @@ export function ContactForm() {
 
         {/* Honeypot — hidden from humans, catnip for bots */}
         <div className="hidden" aria-hidden="true">
-          <label htmlFor="website">Website</label>
+          <label htmlFor="website"> Website </label>
           <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
         </div>
 
         <div className="flex items-center gap-4">
           <button type="submit" disabled={pending} className="btn-primary">
             <Send className="h-4 w-4" />
-            {pending ? "Transmitting..." : "Send message"}
+            {pending ? <SiteText name="app.contact.contact-form.6" /> : <SiteText name="app.contact.contact-form.7" />}
           </button>
           {state.message && (
             <p
@@ -103,7 +98,7 @@ export function ContactForm() {
               aria-live="polite"
             >
               {state.ok ? "✓ " : "✗ "}
-              {state.message}
+              {state.ok ? content["contact.success"] : content[state.messageKey ?? ""] ?? state.message}
             </p>
           )}
         </div>

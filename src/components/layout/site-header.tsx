@@ -1,5 +1,7 @@
 "use client";
 
+import { SiteText, useSiteContent } from "@/components/site-content";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -8,6 +10,7 @@ import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader({ alias, available }: { alias: string; available: boolean }) {
+  const content = useSiteContent();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -25,11 +28,12 @@ export function SiteHeader({ alias, available }: { alias: string; available: boo
           <span className="hidden animate-blink text-[#00FF66] sm:inline">▊</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={cn(
                 "px-3 py-1.5 font-mono text-xs tracking-widest transition-colors",
                 isActive(link.href)
@@ -38,7 +42,7 @@ export function SiteHeader({ alias, available }: { alias: string; available: boo
               )}
             >
               {isActive(link.href) && <span className="mr-1.5 text-[#00FF66]">/</span>}
-              {link.label}
+              {content[`nav.${link.href}`] ?? link.label}
             </Link>
           ))}
           {available && (
@@ -46,27 +50,28 @@ export function SiteHeader({ alias, available }: { alias: string; available: boo
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00FF66] opacity-60" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#00FF66]" />
-              </span>
-              Open to work
-            </span>
+              </span> <SiteText name="components.layout.site-header.2" /> </span>
           )}
         </nav>
 
         <button
-          className="text-zinc-400 hover:text-white md:hidden"
+          className="text-zinc-400 hover:text-white lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <nav className="border-t border-zinc-800 px-6 py-4 md:hidden">
+        <nav id="mobile-navigation" className="border-t border-zinc-800 px-6 py-4 lg:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               onClick={() => setOpen(false)}
               className={cn(
                 "block py-2 font-mono text-sm tracking-widest",
@@ -74,7 +79,7 @@ export function SiteHeader({ alias, available }: { alias: string; available: boo
               )}
             >
               <span className="mr-2 text-zinc-700">›</span>
-              {link.label}
+              {content[`nav.${link.href}`] ?? link.label}
             </Link>
           ))}
         </nav>

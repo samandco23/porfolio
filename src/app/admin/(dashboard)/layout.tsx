@@ -8,6 +8,7 @@ import {
   Wrench,
   Newspaper,
   Inbox,
+  Images,
   ExternalLink,
 } from "lucide-react";
 import { authOptions } from "@/auth";
@@ -17,6 +18,7 @@ import { AdminSidebarMobile } from "../_components/sidebar-mobile";
 import { SignOutButton } from "../_components/signout-button";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -29,6 +31,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: `${base}/projects`, label: "Projects", icon: FolderKanban },
     { href: `${base}/skills`, label: "Skills", icon: Wrench },
     { href: `${base}/blog`, label: "Articles", icon: Newspaper },
+    { href: `${base}/moments`, label: "Events & Gallery", icon: Images },
     { href: `${base}/messages`, label: "Inbox", icon: Inbox },
   ];
 

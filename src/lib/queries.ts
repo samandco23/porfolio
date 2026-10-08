@@ -1,17 +1,16 @@
-import { cache } from "react";
+import { publicCache } from "@/lib/public-cache";
 import { prisma } from "@/lib/db";
 import { parseTags } from "@/lib/utils";
 
 /**
  * Public data-access layer.
- * All functions are cached per-request via React `cache`,
- * so the Profile row is read once per render pass no matter
- * how many components need it.
+ * Public reads are cached across requests for five minutes and invalidated
+ * after admin edits. React cache also deduplicates each render.
  */
 
 export type PublicProfile = Awaited<ReturnType<typeof getProfile>>;
 
-export const getProfile = cache(async () => {
+export const getProfile = publicCache("getProfile", async () => {
   const profile = await prisma.profile.findUnique({
     where: { id: "default" },
     include: {
@@ -21,7 +20,7 @@ export const getProfile = cache(async () => {
   return profile ?? null;
 });
 
-export const getFeaturedProjects = cache(async (take = 3) => {
+export const getFeaturedProjects = publicCache("getFeaturedProjects", async (take: number = 3) => {
   const rows = await prisma.project.findMany({
     where: { status: "PUBLISHED", featured: true },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
@@ -30,7 +29,22 @@ export const getFeaturedProjects = cache(async (take = 3) => {
   return rows.map((p) => ({ ...p, tagList: parseTags(p.tags) }));
 });
 
-export const getPublishedProjects = cache(async () => {
+export const getHomeProjects = publicCache("getHomeProjects", async (take: number = 3) => {
+  const featured = await getFeaturedProjects(take);
+  if (featured.length > 0) return { projects: featured, hasFeatured: true };
+
+  const rows = await prisma.project.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take,
+  });
+  return {
+    projects: rows.map((p) => ({ ...p, tagList: parseTags(p.tags) })),
+    hasFeatured: false,
+  };
+});
+
+export const getPublishedProjects = publicCache("getPublishedProjects", async () => {
   const rows = await prisma.project.findMany({
     where: { status: "PUBLISHED" },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
@@ -38,20 +52,20 @@ export const getPublishedProjects = cache(async () => {
   return rows.map((p) => ({ ...p, tagList: parseTags(p.tags) }));
 });
 
-export const getProjectBySlug = cache(async (slug: string) => {
+export const getProjectBySlug = publicCache("getProjectBySlug", async (slug: string) => {
   const row = await prisma.project.findUnique({ where: { slug } });
   if (!row || row.status !== "PUBLISHED") return null;
   return { ...row, tagList: parseTags(row.tags) };
 });
 
-export const getVisibleSkills = cache(async () => {
+export const getVisibleSkills = publicCache("getVisibleSkills", async () => {
   return prisma.skill.findMany({
     where: { isVisible: true },
     orderBy: [{ category: "asc" }, { order: "asc" }, { name: "asc" }],
   });
 });
 
-export const getPublishedArticles = cache(async () => {
+export const getPublishedArticles = publicCache("getPublishedArticles", async () => {
   const rows = await prisma.article.findMany({
     where: { status: "PUBLISHED" },
     orderBy: { publishedAt: "desc" },
@@ -59,25 +73,42 @@ export const getPublishedArticles = cache(async () => {
   return rows.map((a) => ({ ...a, tagList: parseTags(a.tags) }));
 });
 
-export const getArticleBySlug = cache(async (slug: string) => {
+export const getArticleBySlug = publicCache("getArticleBySlug", async (slug: string) => {
   const row = await prisma.article.findUnique({ where: { slug } });
   if (!row || row.status !== "PUBLISHED") return null;
   return { ...row, tagList: parseTags(row.tags) };
 });
 
 /** All slugs for generateStaticParams. */
-export async function getPublishedProjectSlugs() {
+export const getPublishedProjectSlugs = publicCache("project-sitemap", async () => {
   const rows = await prisma.project.findMany({
     where: { status: "PUBLISHED" },
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
   });
-  return rows.map((r) => ({ slug: r.slug }));
-}
+  return rows.map((r) => ({ slug: r.slug, updatedAt: r.updatedAt }));
+});
 
-export async function getPublishedArticleSlugs() {
+export const getPublishedArticleSlugs = publicCache("article-sitemap", async () => {
   const rows = await prisma.article.findMany({
     where: { status: "PUBLISHED" },
-    select: { slug: true },
+    select: { slug: true, updatedAt: true },
   });
-  return rows.map((r) => ({ slug: r.slug }));
-}
+  return rows.map((r) => ({ slug: r.slug, updatedAt: r.updatedAt }));
+});
+
+export const getSiteContent = publicCache("site-content-v1", async () => {
+  const { resolveSiteContent } = await import("@/lib/site-content");
+  const row = await prisma.siteContent.findUnique({ where: { id: "default" } });
+  return resolveSiteContent(row?.data);
+});
+
+export const getPublishedMoments = publicCache("published-moments", async (take?: number) => {
+  return prisma.moment.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ order: "asc" }, { createdAt: "desc" }], ...(take ? { take } : {}) });
+});
+export const getFeaturedMoments = publicCache("featured-moments", async () => {
+  return prisma.moment.findMany({ where: { status: "PUBLISHED", featured: true }, orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 3 });
+});
+export const getMomentBySlug = publicCache("moment-by-slug", async (slug: string) => {
+  const row = await prisma.moment.findUnique({ where: { slug } });
+  return row?.status === "PUBLISHED" ? row : null;
+});

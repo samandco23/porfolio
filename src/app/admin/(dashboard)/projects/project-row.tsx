@@ -50,6 +50,8 @@ export function ProjectRow({ adminBase, project }: { adminBase: string; project:
         disabled={pending}
         onClick={() => startTransition(() => toggleProjectFeatured(makeFd({ id: project.id })))}
         title="Toggle featured"
+        aria-label={`Toggle ${project.title} featured status`}
+        aria-pressed={project.featured}
         className={`p-1.5 ${project.featured ? "text-[#00FF66]" : "text-zinc-700 hover:text-zinc-400"}`}
       >
         <Star className="h-4 w-4" fill={project.featured ? "currentColor" : "none"} />
@@ -59,13 +61,16 @@ export function ProjectRow({ adminBase, project }: { adminBase: string; project:
         href={`${adminBase}/projects/${project.id}`}
         className="p-1.5 text-zinc-600 hover:text-white"
         title="Edit"
+        aria-label={`Edit ${project.title}`}
       >
         <Pencil className="h-4 w-4" />
       </Link>
 
-      <form action={deleteProject}>
+      <form action={deleteProject} onSubmit={(event) => {
+        if (!window.confirm(`Delete “${project.title}”? This cannot be undone.`)) event.preventDefault();
+      }}>
         <input type="hidden" name="id" value={project.id} />
-        <button type="submit" className="p-1.5 text-zinc-600 hover:text-red-400" title="Delete">
+        <button type="submit" className="p-1.5 text-zinc-600 hover:text-red-400" title="Delete" aria-label={`Delete ${project.title}`}>
           <Trash2 className="h-4 w-4" />
         </button>
       </form>

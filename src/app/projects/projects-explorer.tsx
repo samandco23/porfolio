@@ -1,5 +1,7 @@
 "use client";
 
+import { SiteText } from "@/components/site-content";
+
 import { useMemo, useState } from "react";
 import { ProjectsFilter, type FilterTag } from "./projects-filter";
 import { ProjectCard } from "@/components/project-card";
@@ -51,7 +53,7 @@ export function ProjectsExplorer({ projects }: { projects: ExplorerProject[] }) 
       </div>
 
       {filtered.length === 0 && (
-        <p className="mt-10 font-mono text-sm text-zinc-600">{"// no projects match this filter"}</p>
+        <p className="mt-10 font-mono text-sm text-zinc-600"><SiteText name="app.projects.projects-explorer.1" /></p>
       )}
     </div>
   );

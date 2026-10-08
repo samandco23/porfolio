@@ -47,13 +47,16 @@ export function ArticleRow({ adminBase, article }: { adminBase: string; article:
         href={`${adminBase}/blog/${article.id}`}
         className="p-1.5 text-zinc-600 hover:text-white"
         title="Edit"
+        aria-label={`Edit ${article.title}`}
       >
         <Pencil className="h-4 w-4" />
       </Link>
 
-      <form action={deleteArticle}>
+      <form action={deleteArticle} onSubmit={(event) => {
+        if (!window.confirm(`Delete “${article.title}”? This cannot be undone.`)) event.preventDefault();
+      }}>
         <input type="hidden" name="id" value={article.id} />
-        <button type="submit" className="p-1.5 text-zinc-600 hover:text-red-400" title="Delete">
+        <button type="submit" className="p-1.5 text-zinc-600 hover:text-red-400" title="Delete" aria-label={`Delete ${article.title}`}>
           <Trash2 className="h-4 w-4" />
         </button>
       </form>

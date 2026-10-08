@@ -1,5 +1,7 @@
 "use client";
 
+import { SiteText } from "@/components/site-content";
+
 import { cn } from "@/lib/utils";
 
 export type FilterTag = { tag: string; count: number };
@@ -25,9 +27,7 @@ export function ProjectsFilter({
             ? "border-[#00FF66]/60 bg-[#00FF66]/10 text-[#00FF66]"
             : "border-zinc-800 text-zinc-500 hover:text-zinc-300",
         )}
-      >
-        all
-      </button>
+      > <SiteText name="app.projects.projects-filter.1" /> </button>
       {tags.map(({ tag, count }) => (
         <button
           key={tag}

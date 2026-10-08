@@ -116,6 +116,11 @@ describe("profileSchema", () => {
 });
 
 describe("projectSchema", () => {
+  it("rejects active URL schemes and accepts HTTP image URLs", () => {
+    const project = { title: "Test Project", slug: "test-project", description: "A description that is long enough." };
+    expect(projectSchema.safeParse({ ...project, demoUrl: "javascript:alert(1)" }).success).toBe(false);
+    expect(projectSchema.safeParse({ ...project, imageUrl: "https://example.com/image.png" }).success).toBe(true);
+  });
   it("keeps tags as comma string and validates slug format", () => {
     const parsed = projectSchema.safeParse({
       title: "Test Project",
@@ -153,6 +158,15 @@ describe("skillSchema", () => {
 });
 
 describe("articleSchema", () => {
+  it("rejects an invalid publication date before it reaches Prisma", () => {
+    const article = {
+      title: "Some Article", slug: "some-article", excerpt: "An excerpt long enough.",
+      content: "An article with sufficiently long content.",
+    };
+    expect(articleSchema.safeParse({ ...article, publishedAt: "invalid" }).success).toBe(false);
+    expect(articleSchema.safeParse({ ...article, publishedAt: "2026-10-07T12:00" }).success).toBe(true);
+    expect(articleSchema.safeParse({ ...article, publishedAt: "" }).success).toBe(true);
+  });
   it("requires minimum content length", () => {
     const parsed = articleSchema.safeParse({
       title: "Some Article",

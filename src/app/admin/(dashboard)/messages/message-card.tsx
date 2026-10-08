@@ -26,6 +26,7 @@ export function MessageCard({ message }: { message: MessageRecord }) {
     >
       <button
         type="button"
+        aria-expanded={expanded}
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center gap-3 px-4 py-3 text-left"
       >
@@ -111,7 +112,9 @@ function ActionForm({
   danger?: boolean;
 }) {
   return (
-    <form action={action}>
+    <form action={action} onSubmit={(event) => {
+      if (danger && !window.confirm("Delete this message? This cannot be undone.")) event.preventDefault();
+    }}>
       {Object.entries(fields).map(([k, v]) => (
         <input key={k} type="hidden" name={k} value={v} />
       ))}

@@ -25,6 +25,7 @@ export default async function AdminSkillsPage() {
             name: s.name,
             category: s.category,
             level: s.level,
+            featured: s.featured,
             iconKey: s.iconKey,
             order: s.order,
             isVisible: s.isVisible,
