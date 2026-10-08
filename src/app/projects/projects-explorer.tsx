@@ -3,9 +3,9 @@
 import { SiteText } from "@/components/site-content";
 
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ProjectsFilter, type FilterTag } from "./projects-filter";
 import { ProjectCard } from "@/components/project-card";
-import { Reveal } from "@/components/motion/reveal";
 
 export type ExplorerProject = {
   slug: string;
@@ -19,6 +19,7 @@ export type ExplorerProject = {
 
 export function ProjectsExplorer({ projects }: { projects: ExplorerProject[] }) {
   const [active, setActive] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion();
 
   const tags = useMemo<FilterTag[]>(() => {
     const counts = new Map<string, number>();
@@ -46,11 +47,16 @@ export function ProjectsExplorer({ projects }: { projects: ExplorerProject[] }) 
 
       <p className="mt-6 font-mono text-xs text-zinc-400" role="status">{filtered.length} <SiteText name="redesign.projectsCount" /></p>
       <div className="mt-10 grid gap-x-8 gap-y-12 md:grid-cols-2">
-        {filtered.map((project, i) => (
-          <Reveal key={project.slug} delay={Math.min(i, 6) * 0.06}>
-            <ProjectCard project={project} index={i} headingLevel={2} />
-          </Reveal>
-        ))}
+        <AnimatePresence initial={false} mode="popLayout">
+          {filtered.map((project, i) => <motion.div
+            key={project.slug}
+            layout={reduceMotion ? false : "position"}
+            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, y: -8, transition: { duration: 0.16 } }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.34, delay: Math.min(i, 4) * 0.035, ease: [0.22, 1, 0.36, 1] }}
+          ><ProjectCard project={project} index={i} headingLevel={2} /></motion.div>)}
+        </AnimatePresence>
       </div>
 
       {filtered.length === 0 && (

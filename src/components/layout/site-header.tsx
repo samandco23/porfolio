@@ -32,6 +32,13 @@ export function SiteHeader({ alias }: { alias: string; available: boolean }) {
       </nav>
       <div className="flex shrink-0 items-center gap-2"><PreferenceControls /><button ref={toggle} type="button" className="flex h-11 w-11 items-center justify-center rounded-sm text-zinc-300 transition-colors hover:bg-zinc-800/30 lg:hidden" onClick={() => setOpen((value) => !value)} aria-label={content["preferences.menu"]} aria-expanded={open} aria-controls="mobile-navigation">{open ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}</button></div>
     </div>
-    {open && <nav id="mobile-navigation" aria-label={content["redesign.navigationLabel"]} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-zinc-800 bg-base-950 px-6 pb-6 pt-3 lg:hidden">{NAV_LINKS.map((link, index) => <Link key={link.href} href={link.href} aria-current={active(link.href) ? "page" : undefined} onClick={() => setOpen(false)} className={cn("flex min-h-14 items-center justify-between border-b border-zinc-800 py-3 font-mono text-lg", active(link.href) ? "text-accent" : "text-zinc-200")}><span><span className="mr-5 text-xs text-zinc-400">0{index + 1}</span>{content[`nav.${link.href}`] ?? link.label}</span><ArrowUpRight aria-hidden="true" className="h-5 w-5" /></Link>)}</nav>}
+    <nav
+      id="mobile-navigation"
+      aria-label={content["redesign.navigationLabel"]}
+      aria-hidden={!open}
+      inert={!open}
+      data-open={open}
+      className="mobile-nav absolute left-0 right-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-zinc-800 bg-base-950 px-6 pb-6 pt-3 shadow-xl lg:hidden"
+    >{NAV_LINKS.map((link, index) => <Link key={link.href} href={link.href} aria-current={active(link.href) ? "page" : undefined} onClick={() => setOpen(false)} className={cn("flex min-h-14 items-center justify-between border-b border-zinc-800 py-3 font-mono text-lg", active(link.href) ? "text-accent" : "text-zinc-200")}><span><span className="mr-5 text-xs text-zinc-400">0{index + 1}</span>{content[`nav.${link.href}`] ?? link.label}</span><ArrowUpRight aria-hidden="true" className="h-5 w-5" /></Link>)}</nav>
   </header>;
 }

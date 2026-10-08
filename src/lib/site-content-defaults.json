@@ -340,5 +340,7 @@
   "redesign.skillsIntro": "Un socle technique transversal, du développement à la sécurité et à l’infrastructure. Explorez chaque domaine.",
   "en:redesign.skillsIntro": "A technical foundation spanning development, security and infrastructure. Explore each area.",
   "redesign.unavailable": "Contactez-moi pour connaître mes disponibilités",
-  "en:redesign.unavailable": "Get in touch to discuss my availability"
+  "en:redesign.unavailable": "Get in touch to discuss my availability",
+  "motion.loading": "Chargement de la page…",
+  "en:motion.loading": "Loading page…"
 }

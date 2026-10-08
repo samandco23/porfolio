@@ -269,3 +269,7 @@ The redesign preserves the original Inter and JetBrains Mono fonts and every lig
 - Skills use native disclosures. Moments offer timeline/gallery views, kind filters and album selection.
 - New French and English headings live under `redesign.*` / `en:redesign.*` in **Settings → Public site content**. Defaults are merged on read, so no reseed or migration is needed and existing editorial changes stay intact.
 - Navigation supports Escape to dismiss its mobile menu, visible keyboard focus and comfortable touch targets. Contact fields retain their labels and link validation messages to each input.
+
+### Motion and accessibility
+
+Page entrances and the hero's SVG drawing run once. Project and gallery filters animate only when their content changes; the menu preserves keyboard focus and remains inert while closed. Next.js shows a translated loading state on slower navigations. Reduced-motion preferences remove decorative movement and preserve visible content. This uses the existing Framer Motion dependency and does not affect editable site content or the database schema.

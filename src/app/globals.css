@@ -271,5 +271,105 @@
   .hero-grid .orbit-mark { position: absolute; right: -8rem; top: 1rem; width: 26rem; opacity: .18; z-index: -1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cover-geometry, .project-cover img { transform: none !important; }
+  .cover-geometry, .project-cover img, .moment-media img { transform: none !important; }
+}
+
+/* Motion tokens: entrances, feedback and state changes use different timings. */
+@keyframes hero-arrive {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes page-arrive {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes orbit-appear {
+  from { opacity: 0; transform: scale(.93); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes orbit-draw {
+  from { stroke-dashoffset: 1600; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes loading-trace {
+  from { transform: translateX(-100%) scaleX(.4); }
+  to { transform: translateX(100%) scaleX(.4); }
+}
+@keyframes details-arrive {
+  from { opacity: 0; transform: translate3d(0, -6px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@layer components {
+  .page-transition { animation: page-arrive .42s cubic-bezier(.22, 1, .36, 1) both; }
+  .hero-enter { animation: hero-arrive .72s cubic-bezier(.22, 1, .36, 1) both; }
+  .hero-enter-1 { animation-delay: 0ms; }
+  .hero-enter-2 { animation-delay: 90ms; }
+  .hero-enter-3 { animation-delay: 180ms; }
+  .hero-enter-4 { animation-delay: 260ms; }
+  .hero-enter-5 { animation-delay: 340ms; }
+  .orbit-graphic > svg { animation: orbit-appear .95s cubic-bezier(.22, 1, .36, 1) both; }
+  .orbit-ring { stroke-dasharray: 1600; animation: orbit-draw 1.3s cubic-bezier(.22, 1, .36, 1) both; }
+  .orbit-ring-outer { animation-delay: 160ms; }
+  .orbit-ring-inner { animation-delay: 280ms; }
+  .project-cover { transition: transform .32s cubic-bezier(.22, 1, .36, 1), border-color .22s ease; }
+  .project-card:hover .project-cover, .project-card:focus-visible .project-cover { transform: translate3d(0, -5px, 0); border-color: rgb(var(--accent) / .55); }
+  .project-card:active .project-cover { transform: translate3d(0, -2px, 0); }
+  .project-card .arrow-circle svg, .moment-card .arrow-circle svg { transition: transform .22s cubic-bezier(.22, 1, .36, 1); }
+  .project-card:hover .arrow-circle svg, .moment-card:hover .arrow-circle svg { transform: translate3d(2px, -2px, 0); }
+  .moment-media { transition: border-color .22s ease; }
+  .moment-card:hover .moment-media { border-color: rgb(var(--accent) / .55); }
+  .skill-group[open] > ul { animation: details-arrive .28s cubic-bezier(.22, 1, .36, 1) both; }
+  .contact-form .input-dark { transition: border-color .18s ease, background-color .24s ease; }
+  .contact-form .input-dark:focus { border-color: rgb(var(--accent) / .7); }
+  .route-loading-rule { @apply relative h-px overflow-hidden bg-zinc-800; }
+  .route-loading-rule::after { content: ''; @apply absolute inset-0 bg-accent; animation: loading-trace 1.25s ease-in-out infinite; }
+  .loading-placeholder { @apply rounded-sm bg-zinc-900; }
+}
+@media (max-width: 1023px) {
+  .orbit-mark { pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-transition, .hero-enter, .orbit-graphic > svg, .orbit-ring, .skill-group[open] > ul {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .route-loading-rule::after { animation: none !important; }
+  .project-cover, .project-card .arrow-circle svg, .moment-card .arrow-circle svg, .moment-media, .contact-form .input-dark {
+    transition-duration: .01ms !important;
+    transform: none !important;
+  }
+}
+@layer components {
+  .mobile-nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(0, -8px, 0);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  }
+  .mobile-nav[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+    transition: opacity .26s cubic-bezier(.22, 1, .36, 1), transform .26s cubic-bezier(.22, 1, .36, 1), visibility 0s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav, .mobile-nav[data-open="true"] { transition: none !important; transform: none !important; }
+}
+@layer components {
+  .btn-primary, .btn-ghost { transition: transform .2s cubic-bezier(.22, 1, .36, 1), background-color .2s ease, border-color .2s ease, color .2s ease; }
+  .btn-primary:hover, .btn-ghost:hover { transform: translate3d(0, -2px, 0); }
+  .btn-primary:active, .btn-ghost:active { transform: scale(.98); }
+  .btn-primary svg, .btn-ghost svg { transition: transform .2s cubic-bezier(.22, 1, .36, 1); }
+  .btn-primary:hover svg, .btn-ghost:hover svg { transform: translate3d(3px, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .motion-reveal { opacity: 1 !important; transform: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary, .btn-ghost, .btn-primary svg, .btn-ghost svg { transition-duration: .01ms !important; transform: none !important; }
 }

@@ -23,3 +23,7 @@ Signature components: OrbitMark, ProjectCover/ProjectCard, expertise rows, Momen
 ## Delivery checks
 
 Typecheck, lint, existing meaningful tests and production build. Chrome: 375 / 768 / 1024 / 1440px, light and dark, language persistence, menu keyboard behavior, filtering, skill disclosures, real gallery links and draft privacy. Inspect desktop and mobile screenshots. No horizontal overflow, usable targets, visible focus, 16px prose and inputs, original font and palette values, reduced-motion rendering.
+
+## Motion layer
+
+The motion update uses CSS for first paint, Framer Motion only for pointer response and filtered content, and Next.js route `template.tsx` / `loading.tsx` for navigation. Timing follows the effect: hero entrance 720ms with short stagger, orbit drawing about 1.3s once, route arrival 420ms, menu 260ms in / 180ms out, project filter 340ms in / 160ms out. Images move only a few pixels on hover. The orbital mark follows the mouse with spring motion and returns to center on leave; there is no autonomous loop. Loading is the only repeating trace and remains accompanied by readable text. All motion returns to a stable visible state under `prefers-reduced-motion: reduce`.
