@@ -342,5 +342,13 @@
   "redesign.unavailable": "Contactez-moi pour connaître mes disponibilités",
   "en:redesign.unavailable": "Get in touch to discuss my availability",
   "motion.loading": "Chargement de la page…",
-  "en:motion.loading": "Loading page…"
+  "en:motion.loading": "Loading page…",
+  "home.resumeLink": "Voir mon CV (PDF)",
+  "en:home.resumeLink": "View my résumé (PDF)",
+  "home.githubLink": "Consulter mon GitHub",
+  "en:home.githubLink": "Explore my GitHub",
+  "moments.onePhoto": "photo",
+  "en:moments.onePhoto": "photo",
+  "moments.manyPhotos": "photos",
+  "en:moments.manyPhotos": "photos"
 }

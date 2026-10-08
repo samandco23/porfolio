@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowUp, ArrowUpRight, Github, Linkedin, Twitter, Mail, Globe, Link2 } from "lucide-react";
 import { SiteText } from "@/components/site-content";

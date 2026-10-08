@@ -1,7 +1,7 @@
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
-import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Code2, MapPin, ShieldCheck, Cloud } from "lucide-react";
+import { LocalizedLink as Link } from "@/components/localized-link";
+import { ArrowRight, ArrowUpRight, Code2, MapPin, ShieldCheck, Cloud, FileDown, Github } from "lucide-react";
 import { getProfile, getHomeProjects, getVisibleSkills, getFeaturedMoments } from "@/lib/localized-queries";
 import { Reveal } from "@/components/motion/reveal";
 import { MomentCard } from "@/components/moment-card";
@@ -19,6 +19,7 @@ export default async function HomePage() {
   const name = profile?.fullName || "Berlin Koueni";
   const names = name.trim().split(/\s+/);
   const initials = names.map((part) => part[0]).slice(0, 2).join("").toUpperCase();
+  const github = profile?.socialLinks?.find((link) => link.iconKey === "github");
   const areas = [
     { key: "software", Icon: Code2, categories: ["LANGUAGES", "FRONTEND", "BACKEND", "MOBILE"] },
     { key: "security", Icon: ShieldCheck, categories: ["SECURITY"] },
@@ -34,6 +35,10 @@ export default async function HomePage() {
             <p className="hero-enter hero-enter-3 mt-5 max-w-xl font-mono text-lg leading-snug text-zinc-200 md:text-2xl">{profile?.title}</p>
             <p className="hero-enter hero-enter-4 mt-6 max-w-xl text-base leading-relaxed text-zinc-400">{profile?.shortBio}</p>
             <div className="hero-enter hero-enter-5 mt-8 flex flex-wrap gap-3"><Link href="/projects" className="btn-primary"><SiteText name="app.page.4" /><ArrowUpRight aria-hidden="true" className="h-4 w-4" /></Link><Link href="/contact" className="btn-ghost"><SiteText name="app.page.5" /><ArrowRight aria-hidden="true" className="h-4 w-4" /></Link></div>
+            {(profile?.resumeUrl || github) && <div className="hero-enter hero-enter-5 mt-3 flex flex-wrap gap-x-6 gap-y-1">
+              {profile?.resumeUrl && <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-mono text-xs text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"><FileDown aria-hidden="true" className="h-4 w-4" /><SiteText name="home.resumeLink" /></a>}
+              {github && <a href={github.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-mono text-xs text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"><Github aria-hidden="true" className="h-4 w-4" /><SiteText name="home.githubLink" /></a>}
+            </div>}
           </div>
           <OrbitMark initials={initials} />
         </div>

@@ -4,6 +4,8 @@ import { ArticleDetail } from "@/components/article-detail";
 import { ViewTracker } from "@/components/view-tracker";
 import { pageMetadata, serializeJsonLd } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
+import { localizedPath } from "@/lib/locale-routes";
+import { readPreferences } from "@/lib/server-preferences";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -18,11 +20,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
-  const profile = await getProfile();
+  const [profile, { locale }] = await Promise.all([getProfile(), readPreferences()]);
   const structuredData = {
     "@context": "https://schema.org", "@type": "BlogPosting",
     headline: article.title, description: article.excerpt,
-    url: new URL(`/blog/${article.slug}`, profile?.siteUrl || getSiteUrl()).toString(),
+    url: new URL(localizedPath(`/blog/${article.slug}`, locale), profile?.siteUrl || getSiteUrl()).toString(),
     image: article.coverUrl || undefined,
     datePublished: new Date(article.publishedAt ?? article.createdAt).toISOString(),
     dateModified: new Date(article.updatedAt).toISOString(),

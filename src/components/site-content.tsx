@@ -1,9 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { DEFAULT_SITE_CONTENT } from "@/lib/site-content";
 import { localizedContent, type Locale, type Theme } from "@/lib/preferences";
+import { localizedPath } from "@/lib/locale-routes";
 
 const ContentContext = createContext(DEFAULT_SITE_CONTENT);
 const PreferencesContext = createContext({ locale: "fr" as Locale, theme: "system" as Theme, pending: false, setLocale: (() => {}) as (value: Locale) => void, setTheme: (() => {}) as (value: Theme) => void });
@@ -15,6 +16,7 @@ export function SiteContentProvider({ content, locale: initialLocale = "fr", the
   const [theme, updateTheme] = useState(initialTheme);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+  const pathname = usePathname();
   useEffect(() => { updateLocale(initialLocale); }, [initialLocale]);
   useEffect(() => { document.documentElement.lang = locale; }, [locale]);
   useEffect(() => {
@@ -31,7 +33,7 @@ export function SiteContentProvider({ content, locale: initialLocale = "fr", the
   }, [theme]);
   const translated = useMemo(() => localizedContent(content, locale), [content, locale]);
   return <PreferencesContext.Provider value={{ locale, theme, pending,
-    setLocale: (value) => { persist("portfolio-locale", value); updateLocale(value); startTransition(() => router.refresh()); },
+    setLocale: (value) => { persist("portfolio-locale", value); updateLocale(value); startTransition(() => router.push(localizedPath(`${pathname}${window.location.search}${window.location.hash}`, value))); },
     setTheme: (value) => { persist("portfolio-theme", value); updateTheme(value); },
   }}><ContentContext.Provider value={translated}>{children}</ContentContext.Provider></PreferencesContext.Provider>;
 }

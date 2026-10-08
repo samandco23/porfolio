@@ -4,6 +4,7 @@ import { normalizeLocale } from "./preferences";
 import { getProfile, getSiteContent } from "@/lib/queries";
 import { getSiteUrl } from "@/lib/site-url";
 import { SITE_NAME } from "@/lib/constants";
+import { localizedPath } from "./locale-routes";
 
 export async function pageMetadata({ title, description, path, kind = "site", slug, publishedAt, updatedAt }: {
   title: string; description: string; path: string;
@@ -13,7 +14,12 @@ export async function pageMetadata({ title, description, path, kind = "site", sl
   const [profile, copy] = await Promise.all([getProfile(), getSiteContent()]);
   const { locale } = await readPreferences(normalizeLocale(copy["site.language"]));
   const origin = profile?.siteUrl ? new URL(profile.siteUrl) : getSiteUrl();
-  const url = new URL(path, origin).toString();
+  const url = new URL(localizedPath(path, locale), origin).toString();
+  const languages = {
+    fr: new URL(localizedPath(path, "fr"), origin).toString(),
+    en: new URL(localizedPath(path, "en"), origin).toString(),
+    "x-default": new URL(localizedPath(path, "fr"), origin).toString(),
+  };
   const image = new URL("/api/og", origin);
   image.searchParams.set("kind", kind);
   image.searchParams.set("lang", locale);
@@ -21,7 +27,7 @@ export async function pageMetadata({ title, description, path, kind = "site", sl
   const images = [{ url: image.toString(), width: 1200, height: 630, alt: title }];
   const common = { title, description, url, siteName: profile?.siteName || profile?.fullName || SITE_NAME, images };
   return {
-    title, description, alternates: { canonical: url },
+    title, description, alternates: { canonical: url, languages },
     openGraph: kind === "article" ? {
       ...common, type: "article",
       publishedTime: publishedAt ? new Date(publishedAt).toISOString() : undefined,

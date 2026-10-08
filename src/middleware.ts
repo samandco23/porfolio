@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { getAdminPath, isValidAdminPath } from "@/lib/admin-path";
+import { isPublicPath, routeLocale, stripLocale } from "@/lib/locale-routes";
+import { normalizeLocale } from "@/lib/preferences";
 
 /**
  * Admin routes live internally under /admin. The public entry path is
@@ -67,6 +69,29 @@ export async function middleware(req: NextRequest) {
     (pathname === LEGACY_PREFIX || pathname.startsWith(`${LEGACY_PREFIX}/`))
   ) {
     return rewrite(req, NOT_FOUND_ROUTE);
+  }
+
+  // Only known public routes may be rewritten. In particular, /fr/admin
+  // must never bypass the admin authentication branch above.
+  if (pathname === "/api" || pathname.startsWith("/api/")) return NextResponse.next();
+  const locale = routeLocale(pathname);
+  if (locale) {
+    const internal = stripLocale(pathname);
+    if (!isPublicPath(internal)) return NextResponse.next();
+    const headers = new Headers(req.headers);
+    headers.set("x-portfolio-locale", locale);
+    const url = req.nextUrl.clone();
+    url.pathname = internal;
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+  if (isPublicPath(pathname)) {
+    const chosen = normalizeLocale(req.cookies.get("portfolio-locale")?.value,
+      req.headers.get("accept-language")?.trim().toLowerCase().startsWith("en") ? "en" : "fr");
+    const url = req.nextUrl.clone();
+    url.pathname = `/${chosen}${pathname === "/" ? "" : pathname}`;
+    const response = NextResponse.redirect(url, 307);
+    response.headers.set("Vary", "Cookie, Accept-Language");
+    return response;
   }
 
   return NextResponse.next();

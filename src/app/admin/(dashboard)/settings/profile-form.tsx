@@ -129,7 +129,7 @@ export function ProfileForm({ profile, uploadEnabled = false }: { profile: Profi
           <input className="input-dark" placeholder="https://..." {...register("avatarUrl")} />
           <ImageUpload enabled={uploadEnabled} onUploaded={(url) => setValue("avatarUrl", url, { shouldDirty: true, shouldValidate: true })} />
         </Field>
-        <Field label="Resume URL (PDF)" error={state.errors?.resumeUrl ?? errors.resumeUrl?.message}>
+        <Field label="Resume URL (PDF)" hint="When provided, the résumé link appears on the homepage and About page." error={state.errors?.resumeUrl ?? errors.resumeUrl?.message}>
           <input className="input-dark" placeholder="https://..." {...register("resumeUrl")} />
         </Field>
         <Field label="SEO title" error={state.errors?.seoTitle ?? errors.seoTitle?.message}>

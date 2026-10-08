@@ -2,6 +2,12 @@
 const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "www.getsmarter-group.com", pathname: "/image/**" },
+      { protocol: "https", hostname: "res.cloudinary.com", pathname: "/*/image/upload/**" },
+    ],
+  },
   async headers() {
     const headers = [
       { key: "X-Content-Type-Options", value: "nosniff" },

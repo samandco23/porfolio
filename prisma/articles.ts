@@ -8,7 +8,7 @@ export type SeedArticle = {
   en: { title: string; excerpt: string; content: string };
 };
 
-export const articlesContent: SeedArticle[] = [
+export const baseArticlesContent: SeedArticle[] = [
   {
     slug: "concevoir-api-rest-laravel",
     title: "Concevoir une API REST Laravel qui reste claire en grandissant",
@@ -376,3 +376,51 @@ Further reading: [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/).`,
     },
   },
 ];
+
+const projectConnections: Record<string, { fr: string; en: string }> = {
+  "concevoir-api-rest-laravel": {
+    fr: "Dans ma [plateforme e-commerce](/projects/e-commerce-platform), le catalogue, les comptes et l'administration illustrent la nécessité de séparer validation, règles métier et permissions. La [gestion scolaire](/projects/school-management-platform) pose la même question pour les rôles d'administration.",
+    en: "My [e-commerce platform](/projects/e-commerce-platform) includes a catalog, accounts and administration: a concrete setting for separating validation, business rules and permissions. The [school management platform](/projects/school-management-platform) raises the same question for administrative roles.",
+  },
+  "react-nextjs-frontiere-serveur-client": {
+    fr: "Ce portfolio en est un exemple : les projets et les articles proviennent de la base de données, tandis que les filtres, le choix de langue et le thème demandent de l'interactivité côté navigateur. Le découpage entre rendu serveur et composants clients est visible directement sur ce site.",
+    en: "This portfolio is one example: projects and articles come from the database, while filters, language choice and theme need browser interactivity. The boundary between server rendering and Client Components is visible on this site.",
+  },
+  "react-native-expo-notifications-utiles": {
+    fr: "Sur [Guidtwam](/projects/guidtwam), la configuration des notifications push Expo fait partie des travaux présentés. Pour une plateforme de transport, une confirmation et une mise à jour de trajet sont des cas qui montrent pourquoi le moment d'envoi et l'écran de destination comptent autant que l'intégration technique.",
+    en: "[Guidtwam](/projects/guidtwam) includes Expo push notification configuration among the work described. For a transportation platform, confirmations and trip updates illustrate why delivery timing and the destination screen matter as much as the integration itself.",
+  },
+  "postgresql-indexer-requetes-reelles": {
+    fr: "La fiche [FON KOUENI ERP](/projects/fon-koueni-erp) présente une architecture multi-tenant et un travail de modélisation. Elle fournit un cas concret pour réfléchir aux requêtes par tenant et aux index à mesurer, sans supposer un choix de base de données qui n'est pas documenté dans le projet.",
+    en: "The [FON KOUENI ERP](/projects/fon-koueni-erp) case describes multi-tenant architecture and data modeling. It offers a concrete setting for thinking about tenant-scoped queries and indexes to measure, without assuming an undocumented database choice for that project.",
+  },
+  "docker-compose-pipeline-livraison": {
+    fr: "Pour ce portfolio, la vérification avant livraison inclut TypeScript, lint, tests et build. Cette séquence rend les changements relisibles. Compose devient utile lorsqu'une application a plusieurs services à lancer ensemble ; il faut alors compléter la pipeline par une vérification après déploiement.",
+    en: "For this portfolio, pre-delivery checks include TypeScript, lint, tests and a build. That sequence makes changes reviewable. Compose becomes useful when an application needs several services running together; the pipeline should then be complemented by post-deployment checks.",
+  },
+  "securite-api-autorisation-objet": {
+    fr: "[Guidtwam](/projects/guidtwam) comprend un travail de sécurisation des APIs d'une plateforme de réservation. C'est le type de produit où il faut vérifier qu'un compte ne peut consulter ou modifier que les réservations auxquelles il est autorisé à accéder.",
+    en: "[Guidtwam](/projects/guidtwam) includes API security work for a booking platform. This type of product needs checks ensuring that an account can only read or change bookings it is authorized to access.",
+  },
+  "linux-nginx-deploiement-observable": {
+    fr: "La fiche [OVNI SOLUTIONS TI](/projects/ovni-solutions-ti) documente une réflexion d'architecture Cloud et sécurité. Les points de contrôle ci-dessus sont une grille à utiliser lorsque cette architecture passe de la conception à un service effectivement déployé.",
+    en: "The [OVNI SOLUTIONS TI](/projects/ovni-solutions-ti) case documents Cloud and security architecture exploration. The checks above are a useful framework when such an architecture moves from design to an actually deployed service.",
+  },
+  "active-directory-group-policy-permissions": {
+    fr: "Mon projet [IT Infrastructure](/projects/it-infrastructure) couvre Active Directory, les OU, les groupes, les GPO, DHCP et les permissions. Il illustre pourquoi une stratégie de groupe se prépare à partir d'un besoin d'accès clair et se vérifie sur les comptes et machines concernés.",
+    en: "My [IT Infrastructure](/projects/it-infrastructure) project covers Active Directory, OUs, groups, GPOs, DHCP and permissions. It illustrates why Group Policy begins with clear access needs and should be verified on the affected accounts and machines.",
+  },
+  "ui-ux-accessibilite-etats-interface": {
+    fr: "Les projets [ERS & FILS CLEANING](/projects/ers-fils-cleaning) et [IDEIA Agency](/projects/ideia-agency) portent sur la conception d'interfaces et de parcours. Ils rappellent qu'un prototype doit aussi prévoir les états de formulaire, les écrans vides et la lecture sur mobile, même lorsque la première maquette montre seulement le parcours idéal.",
+    en: "[ERS & FILS CLEANING](/projects/ers-fils-cleaning) and [IDEIA Agency](/projects/ideia-agency) involve interface and user-flow design. They are reminders to cover form states, empty screens and mobile reading even when an early mockup shows only the ideal journey.",
+  },
+};
+
+export const articlesContent: SeedArticle[] = baseArticlesContent.map((article) => {
+  const connection = projectConnections[article.slug];
+  return {
+    ...article,
+    content: `${article.content}\n\n## Lien avec mon travail\n\n${connection.fr}`,
+    en: { ...article.en, content: `${article.en.content}\n\n## Connection to my work\n\n${connection.en}` },
+  };
+});

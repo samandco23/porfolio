@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import { ArrowUpRight } from "lucide-react";
 import { ProjectCover } from "./project-cover";
 import { TagList } from "./tag-list";

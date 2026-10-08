@@ -1,12 +1,13 @@
 "use client";
 import { useSiteContent } from "@/components/site-content";
 import { PreferenceControls } from "./preference-controls";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { stripLocale } from "@/lib/locale-routes";
 
 export function SiteHeader({ alias }: { alias: string; available: boolean }) {
   const content = useSiteContent();
@@ -20,7 +21,8 @@ export function SiteHeader({ alias }: { alias: string; available: boolean }) {
     document.addEventListener("keydown", dismiss);
     return () => document.removeEventListener("keydown", dismiss);
   }, [open]);
-  const active = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const currentPath = stripLocale(pathname);
+  const active = (href: string) => href === "/" ? currentPath === "/" : currentPath.startsWith(href);
   const dot = alias.lastIndexOf(".");
   return <header className="sticky top-0 z-50 border-b border-zinc-800 bg-base-950/95 backdrop-blur-md">
     <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-5 sm:px-10 lg:px-12">

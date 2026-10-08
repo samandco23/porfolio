@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { canOptimizeImage } from "@/lib/media";
 
 export function ProjectCover({ title, slug, imageUrl, tags = [] }: { title: string; slug: string; imageUrl?: string | null; tags?: string[] }) {
   const [failed, setFailed] = useState<string | null>(null);
   const variant = [...slug].reduce((sum, letter) => sum + letter.charCodeAt(0), 0) % 3;
   return <div className={`project-cover project-cover-${variant}`}>
-    {imageUrl && imageUrl !== failed ? <Image src={imageUrl} alt={title} fill unoptimized onError={() => setFailed(imageUrl)} sizes="(max-width: 768px) 100vw, 60vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" /> : <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+    {imageUrl && imageUrl !== failed ? <Image src={imageUrl} alt={title} fill unoptimized={!canOptimizeImage(imageUrl)} onError={() => setFailed(imageUrl)} sizes="(max-width: 768px) 100vw, 60vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.025]" /> : <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <svg viewBox="0 0 800 500" fill="none" className="cover-geometry" preserveAspectRatio="xMidYMid slice">
         {variant === 0 ? <g stroke="currentColor">
           <path d="M-80 330L270 130l290 165 340-195M-80 405L270 205l290 165 340-195M270 130v300m290-135v205M0 85h800M0 415h800" opacity="0.35" />

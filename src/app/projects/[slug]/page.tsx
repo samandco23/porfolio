@@ -4,6 +4,8 @@ import { ProjectDetail } from "@/components/project-detail";
 import { ViewTracker } from "@/components/view-tracker";
 import { pageMetadata, serializeJsonLd } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
+import { localizedPath } from "@/lib/locale-routes";
+import { readPreferences } from "@/lib/server-preferences";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -17,12 +19,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) notFound();
-  const [projects, profile] = await Promise.all([getPublishedProjects(), getProfile()]);
+  const [projects, profile, { locale }] = await Promise.all([getPublishedProjects(), getProfile(), readPreferences()]);
   const related = projects.filter((p) => p.slug !== project.slug && p.tagList.some((tag) => project.tagList.includes(tag))).slice(0, 3);
   const structuredData = {
     "@context": "https://schema.org", "@type": "CreativeWork",
     name: project.title, description: project.description,
-    url: new URL(`/projects/${project.slug}`, profile?.siteUrl || getSiteUrl()).toString(),
+    url: new URL(localizedPath(`/projects/${project.slug}`, locale), profile?.siteUrl || getSiteUrl()).toString(),
     image: project.imageUrl || undefined,
     dateModified: new Date(project.updatedAt).toISOString(),
     creator: profile?.fullName ? { "@type": "Person", name: profile.fullName } : undefined,

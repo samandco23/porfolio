@@ -1,12 +1,14 @@
 
 import { SiteText } from "@/components/site-content";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import type { Project } from "@prisma/client";
 import { ArrowLeft, ExternalLink, Github, Eye } from "lucide-react";
 import { Markdown } from "@/components/markdown";
 import { ProjectCover } from "@/components/project-cover";
 import { TagList } from "@/components/tag-list";
 import { parseProjectContent } from "@/lib/project-content";
+import Image from "next/image";
+import { canOptimizeImage } from "@/lib/media";
 
 type DetailProject = Project & { tagList: string[] };
 
@@ -53,8 +55,7 @@ export function ProjectDetail({ project, related = [], preview = false }: {
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           {screenshots.map((url, index) => <figure key={`${index}-${url}`}>
             <a href={url} target="_blank" rel="noopener noreferrer" className="block border border-zinc-800 hover:border-accent/50">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={`${project.title} — screenshot ${index + 1}`} width={960} height={600} loading="lazy" className="aspect-[8/5] w-full object-contain bg-black" />
+              <Image src={url} unoptimized={!canOptimizeImage(url)} alt={`${project.title} — screenshot ${index + 1}`} width={960} height={600} sizes="(max-width: 640px) 100vw, 50vw" loading="lazy" className="aspect-[8/5] w-full object-contain bg-black" />
             </a>
             <figcaption className="mt-2 font-mono text-xs text-zinc-400"> <SiteText name="components.project-detail.7" /> {index + 1} <SiteText name="components.project-detail.8" /> </figcaption>
           </figure>)}

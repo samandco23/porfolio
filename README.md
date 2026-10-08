@@ -110,7 +110,7 @@ Admin form → Zod validation (client + server) → authenticated Server Action 
 - Public database reads use a five-minute Next.js Data Cache, invalidated after admin edits. Pages render at request time using `connection()`, so production builds do not require a reachable database. Admin reads and private previews bypass the public cache.
 - Skills levels render as hairline meters on `/about`; categories expand as native, keyboard-accessible disclosures.
 - Home shows up to three published featured projects. If none are featured, it shows the three latest published projects. Draft projects remain private.
-- Project card images load directly from their configured URLs. To enable Next.js image optimization later, configure a trusted asset host with `images.remotePatterns` and remove `unoptimized` from `ProjectCover`.
+- Project and gallery images use Next.js optimization for trusted local, GetSmarter and Cloudinary URLs. Other admin-provided URLs keep working through the browser without image optimization.
 - Markdown is rendered server-side with `react-markdown` + `remark-gfm` and styled by `.prose-dark`.
 - Abuse limits are stored in PostgreSQL and shared across serverless instances. Apply the current Prisma schema before deploying schema changes.
 - View counters use a separate browser request to `/api/views`, limited to one increment per IP/content item every 30 minutes. Rendering or prefetching a page no longer writes to the database. Public counters may lag by up to five minutes; admin counters read fresh values.
@@ -151,7 +151,15 @@ The **Connected services** section of admin settings shows whether each integrat
 
 ### Sharing and search
 
-Every public page has a canonical URL and Open Graph/Twitter metadata. `/api/og` generates a 1200 × 630 PNG for the portfolio or a published project/article. Project pages include `CreativeWork` structured data; article pages include `BlogPosting` data. The sitemap includes content modification dates. Keep `NEXT_PUBLIC_SITE_URL` set to the final public HTTPS origin.
+Every public page has language-specific `/fr` and `/en` URLs, canonical and `hreflang` metadata, and Open Graph/Twitter metadata. Unprefixed routes select a language from the saved preference or browser language. `/api/og` generates a 1200 × 630 PNG for the portfolio or a published project/article. Project pages include `CreativeWork` structured data; article pages include `BlogPosting` data. The sitemap lists both language variants with alternates. Keep `NEXT_PUBLIC_SITE_URL` set to the final public HTTPS origin.
+
+### Recruiter profile and memories
+
+The homepage shows the CV link only when a PDF URL is entered in **Admin → Settings → Profile**; the same link appears on About. GitHub is surfaced alongside it when configured. Memories remain editable in the admin panel, including captions, dates, source attribution and gallery images. The supplied GetSmarter Hacking Challenge memory retains its publicly sourced image and credit; no unsupplied CV or event photos are fabricated.
+
+### Articles connected to project work
+
+The articles seed appends a short bilingual section connecting each technical topic to a documented project in the portfolio. It creates missing records and upgrades only the original untouched seed copy, preserving content edits made in the admin panel. Re-run `npm run db:articles` after changing the article seed.
 
 ---
 

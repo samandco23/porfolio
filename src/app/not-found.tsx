@@ -1,6 +1,6 @@
 
 import { SiteText } from "@/components/site-content";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 
 export const metadata = { title: "404 — Not found" };
 

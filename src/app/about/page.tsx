@@ -7,6 +7,7 @@ import { SKILL_CATEGORIES } from "@/lib/constants";
 import { Markdown } from "@/components/markdown";
 import { PageHeading } from "@/components/page-heading";
 import { OrbitMark } from "@/components/orbit-mark";
+import { canOptimizeImage } from "@/lib/media";
 export async function generateMetadata() {
   const copy = await getSiteContent();
   return pageMetadata({ title: copy["seo.about.title"], description: copy["seo.about.description"], path: "/about" });
@@ -19,7 +20,7 @@ export default async function AboutPage() {
     <div className="mt-12 grid items-start gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-20">
       <div><Markdown content={profile?.longBio || content["app.about.page.3"]} />{profile?.resumeUrl && <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-8"><FileDown aria-hidden="true" className="h-4 w-4" /><SiteText name="app.about.page.4" /></a>}</div>
       <aside className="min-w-0 lg:sticky lg:top-28">
-        {profile?.avatarUrl ? <div className="overflow-hidden rounded-md border border-zinc-800"><Image unoptimized src={profile.avatarUrl} alt={profile.fullName} width={640} height={640} loading="lazy" className="aspect-square w-full object-cover" /></div> : <div className="rounded-md border border-zinc-800 bg-base-400 p-6"><OrbitMark initials={initials} /></div>}
+        {profile?.avatarUrl ? <div className="overflow-hidden rounded-md border border-zinc-800"><Image unoptimized={!canOptimizeImage(profile.avatarUrl)} src={profile.avatarUrl} alt={profile.fullName} width={640} height={640} sizes="(max-width: 1024px) 100vw, 420px" loading="lazy" className="aspect-square w-full object-cover" /></div> : <div className="rounded-md border border-zinc-800 bg-base-400 p-6"><OrbitMark initials={initials} /></div>}
         <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5 border-b border-zinc-800 pb-6 text-sm">
           {profile?.location && <div><dt className="font-mono text-xs text-zinc-400"><SiteText name="app.about.page.5" /></dt><dd className="mt-2 text-zinc-200">{profile.location}</dd></div>}
           <div><dt className="font-mono text-xs text-zinc-400"><SiteText name="app.about.page.8" /></dt><dd className="mt-2 text-accent"><SiteText name={profile?.available ? "app.about.page.11" : "app.about.page.12"} /></dd></div>

@@ -1,7 +1,7 @@
 
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import { getPublishedArticles, getSiteContent } from "@/lib/localized-queries";
 import { formatDate } from "@/lib/utils";
 import { TagList } from "@/components/tag-list";

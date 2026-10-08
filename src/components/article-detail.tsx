@@ -1,11 +1,13 @@
 
 import { SiteText } from "@/components/site-content";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/localized-link";
 import type { Article } from "@prisma/client";
 import { ArrowLeft, Eye } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Markdown } from "@/components/markdown";
 import { TagList } from "@/components/tag-list";
+import Image from "next/image";
+import { canOptimizeImage } from "@/lib/media";
 
 export function ArticleDetail({ article, preview = false }: { article: Article & { tagList: string[] }; preview?: boolean }) {
   const date = article.publishedAt ?? article.createdAt;
@@ -23,8 +25,7 @@ export function ArticleDetail({ article, preview = false }: { article: Article &
       </div>
     </header>
     {article.coverUrl && <div className="mt-10 border border-zinc-800">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={article.coverUrl} alt={article.title} width={1200} height={675} loading="lazy" className="aspect-video w-full object-cover" />
+      <Image src={article.coverUrl} unoptimized={!canOptimizeImage(article.coverUrl)} alt={article.title} width={1200} height={675} sizes="(max-width: 1024px) 100vw, 960px" loading="lazy" className="aspect-video w-full object-cover" />
     </div>}
     <div className="mt-10 max-w-3xl"><Markdown content={article.content} /></div>
   </article>;
