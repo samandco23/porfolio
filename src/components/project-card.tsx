@@ -22,7 +22,7 @@ export function ProjectCard({ project }: { project: ProjectCardProject }) {
     <motion.div whileHover={reduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }} className="h-full">
       <Link
         href={`/projects/${project.slug}`}
-        className="group relative flex h-full flex-col border border-zinc-800 bg-[#0a0a0a] transition-colors duration-300 hover:border-[#00FF66]/50 hover:shadow-[0_0_30px_rgba(0,255,102,0.07)]"
+        className="group relative flex h-full flex-col border border-zinc-800 bg-base-400 transition-colors duration-300 hover:border-accent/50 hover:shadow-[0_0_30px_rgba(0,255,102,0.07)]"
       >
         {project.imageUrl ? (
           <div className="relative aspect-video overflow-hidden border-b border-zinc-800">
@@ -38,7 +38,7 @@ export function ProjectCard({ project }: { project: ProjectCardProject }) {
           </div>
         ) : (
           <div className="grid-backdrop flex aspect-video items-center justify-center border-b border-zinc-800">
-            <FolderGit2 className="h-8 w-8 text-zinc-700 transition-colors group-hover:text-[#00FF66]/70" />
+            <FolderGit2 className="h-8 w-8 text-zinc-700 transition-colors group-hover:text-accent/70" />
           </div>
         )}
 
@@ -47,7 +47,7 @@ export function ProjectCard({ project }: { project: ProjectCardProject }) {
             <h3 className="font-mono text-base text-zinc-100 group-hover:text-white">
               {project.title}
             </h3>
-            {project.featured && <Star className="h-3.5 w-3.5 shrink-0 text-[#00FF66]" />}
+            {project.featured && <Star className="h-3.5 w-3.5 shrink-0 text-accent" />}
           </div>
 
           {project.year && (
@@ -60,7 +60,7 @@ export function ProjectCard({ project }: { project: ProjectCardProject }) {
 
           <div className="mt-4 flex items-center justify-between">
             <TagList tags={project.tagList.slice(0, 4)} />
-            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-700 transition-colors group-hover:text-[#00FF66]" />
+            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-700 transition-colors group-hover:text-accent" />
           </div>
         </div>
       </Link>

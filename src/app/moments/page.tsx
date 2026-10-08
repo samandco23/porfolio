@@ -1,4 +1,4 @@
-import { getPublishedMoments, getSiteContent } from "@/lib/queries";
+import { getPublishedMoments, getSiteContent } from "@/lib/localized-queries";
 import { pageMetadata } from "@/lib/seo";
 import { SiteText } from "@/components/site-content";
 import { MomentsExplorer } from "./moments-explorer";

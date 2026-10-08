@@ -37,7 +37,7 @@ export async function SiteFooter({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="text-zinc-600 transition-colors hover:text-[#00FF66]"
+                className="text-zinc-600 transition-colors hover:text-accent"
               >
                 <Icon className="h-4 w-4" />
               </a>

@@ -9,7 +9,7 @@ export default function NotFound() {
     <div className="grid-backdrop flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
       <p className="font-mono text-xs uppercase tracking-widest text-zinc-600"> <SiteText name="app.not-found.1" /> </p>
       <h1 className="mt-4 font-mono text-7xl text-white md:text-8xl">
-        4<span className="text-[#00FF66] text-glow">0</span>4
+        4<span className="text-accent text-glow">0</span>4
       </h1>
       <p className="mt-5 max-w-md font-mono text-sm leading-relaxed text-zinc-500">
         <SiteText name="app.not-found.2" />

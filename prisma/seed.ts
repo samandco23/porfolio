@@ -1,10 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { seedTranslations } from "./translations";
 import { profileContent, projectsContent, skillsContent } from "./content";
 import { DEFAULT_SITE_CONTENT } from "../src/lib/site-content";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient((process.argv.includes("--translations-only") || process.argv.includes("--moments-only")) && process.env.DIRECT_URL ? { datasources: { db: { url: process.env.DIRECT_URL } } } : undefined);
 async function main() {
+  if (process.argv.includes("--moments-only")) { const { updateMoments } = await import("./update-moments"); await updateMoments(prisma); return; }
+  if (process.argv.includes("--translations-only")) {
+    const { updateTranslations } = await import("./update-translations");
+    await updateTranslations(prisma);
+    return;
+  }
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Set a valid ADMIN_EMAIL.");
@@ -50,11 +57,20 @@ async function main() {
       return prisma.socialLink.upsert({ where: { id }, create: { id, profileId: "default", isVisible: true, ...data }, update: { ...data, isVisible: true } });
     }),
   ]);
+  const [profile, projects, settings] = await Promise.all([
+    prisma.profile.findUnique({ where: { id: "default" } }),
+    prisma.project.findMany({ select: { id: true, slug: true, description: true, content: true } }),
+    prisma.siteContent.findUnique({ where: { id: "default" } }),
+  ]);
+  const current = settings?.data && typeof settings.data === "object" && !Array.isArray(settings.data) ? settings.data : {};
+  await prisma.siteContent.update({ where: { id: "default" }, data: { data: { ...DEFAULT_SITE_CONTENT, ...seedTranslations(profile, projects), ...current } } });
+  const { updateMoments } = await import("./update-moments");
+  await updateMoments(prisma);
   console.log(`Seed complete: Berlin Koueni, ${projectsContent.length} published projects (${projectsContent.filter((p) => p.featured).length} featured), ${skillsContent.length} skills (${skillsContent.filter((s) => s.featured).length} in main stack), GitHub and LinkedIn.`);
 }
 main().catch((error: unknown) => {
   // Avoid leaking database credentials in provider error messages.
-  const code = error && typeof error === "object" && "code" in error ? String(error.code) : "connection or configuration error";
+  const code = error && typeof error === "object" && "code" in error ? String(error.code) : error && typeof error === "object" && "errorCode" in error ? String(error.errorCode) : "connection or configuration error";
   console.error(`Database seed failed (${code}). Check database connectivity and admin configuration.`);
   process.exitCode = 1;
 }).finally(() => prisma.$disconnect());

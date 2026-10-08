@@ -23,7 +23,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
       <div className="flex items-center justify-between">
         <Link
           href={`${base}/blog`}
-          className="inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-[#00FF66]"
+          className="inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-accent"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> back to articles
         </Link>
@@ -31,7 +31,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
           href={article.status === "DRAFT" ? `${base}/blog/${article.id}/preview` : `/blog/${article.slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-mono text-xs text-zinc-600 hover:text-[#00FF66]"
+          className="font-mono text-xs text-zinc-600 hover:text-accent"
         >
           {article.status === "DRAFT" ? "preview draft →" : "view public page →"}
         </a>

@@ -3,7 +3,7 @@ import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { getProfile, getHomeProjects, getVisibleSkills, getFeaturedMoments } from "@/lib/queries";
+import { getProfile, getHomeProjects, getVisibleSkills, getFeaturedMoments } from "@/lib/localized-queries";
 import { Reveal } from "@/components/motion/reveal";
 import { MomentCard } from "@/components/moment-card";
 import { ProjectCard } from "@/components/project-card";
@@ -23,12 +23,12 @@ export default async function HomePage() {
     <div>
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="grid-backdrop relative overflow-hidden border-b border-zinc-800">
-        <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[42rem] -translate-x-1/2 rounded-full bg-[#00FF66]/5 blur-3xl" />
+        <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[42rem] -translate-x-1/2 rounded-full bg-accent/5 blur-3xl" />
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
           <Reveal>
             <p className="font-mono text-micro uppercase text-zinc-500">
               <SiteText name="app.page.1" />
-              <span className="animate-blink text-[#00FF66]">▊</span>
+              <span className="animate-blink text-accent">▊</span>
             </p>
           </Reveal>
 
@@ -41,7 +41,7 @@ export default async function HomePage() {
             </h1>
           </Reveal>
 
-          {profile?.specialties && <p className="mt-5 max-w-3xl font-mono text-sm text-[#00FF66]">{profile.specialties}</p>}
+          {profile?.specialties && <p className="mt-5 max-w-3xl font-mono text-sm text-accent">{profile.specialties}</p>}
           {profile?.tagline && <p className="mt-4 max-w-2xl font-mono text-sm text-zinc-300">{profile.tagline}</p>}
 
           <Reveal delay={0.16}>
@@ -74,24 +74,24 @@ export default async function HomePage() {
               </div>
               <div className="space-y-1.5 p-4 font-mono text-[13px] leading-relaxed">
                 <p>
-                  <span className="text-[#00FF66]">$</span>{" "}
+                  <span className="text-accent">$</span>{" "}
                   <span className="text-zinc-400"> <SiteText name="app.page.7" /> </span>
                 </p>
                 <p className="text-zinc-300">
                   {profile?.fullName} — {profile?.title}
                 </p>
                 <p>
-                  <span className="text-[#00FF66]">$</span>{" "}
+                  <span className="text-accent">$</span>{" "}
                   <span className="text-zinc-400"> <SiteText name="app.page.8" /> </span>
                 </p>
                 <p className="text-zinc-300">{profile?.email}</p>
                 <p>
-                  <span className="text-[#00FF66]">$</span>{" "}
+                  <span className="text-accent">$</span>{" "}
                   <span className="text-zinc-400"> <SiteText name="app.page.9" /> </span>{" "}
                   <span className="text-zinc-500">
                     {profile?.available ? <SiteText name="app.page.10" /> : <SiteText name="app.page.11" />}
                   </span>{" "}
-                  <span className="animate-blink text-[#00FF66]">▊</span>
+                  <span className="animate-blink text-accent">▊</span>
                 </p>
               </div>
             </div>
@@ -102,7 +102,7 @@ export default async function HomePage() {
       {skills.some((skill) => skill.featured) && <section className="mx-auto max-w-6xl border-b border-zinc-800 px-6 py-10">
         <h2 className="section-label"><SiteText name="home.stackTitle" /></h2>
         <ul className="mt-5 flex flex-wrap gap-3">{skills.filter((skill) => skill.featured).map((skill) => <li key={skill.id} className="border border-zinc-800 px-3 py-2 font-mono text-xs text-zinc-300">{skill.name}</li>)}</ul>
-        <Link href="/about#skills" className="mt-5 inline-block font-mono text-xs text-[#00FF66]"><SiteText name="home.stackLink" /></Link>
+        <Link href="/about#skills" className="mt-5 inline-block font-mono text-xs text-accent"><SiteText name="home.stackLink" /></Link>
       </section>}
 
       {/* ── FEATURED PROJECTS ────────────────────────────── */}
@@ -115,7 +115,7 @@ export default async function HomePage() {
                 {hasFeatured ? <SiteText name="app.page.14" /> : <SiteText name="app.page.15" />}
               </h2>
             </div>
-            <Link href="/projects" className="font-mono text-xs text-zinc-500 hover:text-[#00FF66]"> <SiteText name="app.page.16" /> </Link>
+            <Link href="/projects" className="font-mono text-xs text-zinc-500 hover:text-accent"> <SiteText name="app.page.16" /> </Link>
           </div>
         </Reveal>
 
@@ -127,13 +127,13 @@ export default async function HomePage() {
           ))}
           {projects.length === 0 && (
             <p className="font-mono text-sm text-zinc-600"> <SiteText name="app.page.17" /> {" "}
-              <Link href="/contact" className="text-[#00FF66] hover:underline"> <SiteText name="app.page.18" /> </Link>
+              <Link href="/contact" className="text-accent hover:underline"> <SiteText name="app.page.18" /> </Link>
             </p>
           )}
         </div>
       </section>
       <section className="mx-auto max-w-6xl border-t border-zinc-800 px-6 py-16">
-        <div className="flex flex-wrap items-center justify-between gap-4"><h2 className="font-mono text-2xl text-white"><SiteText name="moments.title" /></h2><Link href="/moments" className="font-mono text-xs text-[#00FF66]"><SiteText name="home.momentsLink" /></Link></div>
+        <div className="flex flex-wrap items-center justify-between gap-4"><h2 className="font-mono text-2xl text-white"><SiteText name="moments.title" /></h2><Link href="/moments" className="font-mono text-xs text-accent"><SiteText name="home.momentsLink" /></Link></div>
         {moments.length > 0 ? <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{moments.map((moment) => <MomentCard key={moment.id} moment={moment} />)}</div> : <p className="mt-4 text-sm text-zinc-500"><SiteText name="moments.intro" /></p>}
       </section>
     </div>

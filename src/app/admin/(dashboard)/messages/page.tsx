@@ -49,7 +49,7 @@ export default async function AdminMessagesPage({
             href={`${base}/messages?filter=${f}`}
             className={`border px-3 py-1 font-mono text-xs ${
               filter === f
-                ? "border-[#00FF66]/60 bg-[#00FF66]/10 text-[#00FF66]"
+                ? "border-accent/60 bg-accent/10 text-accent"
                 : "border-zinc-800 text-zinc-500 hover:text-zinc-300"
             }`}
           >

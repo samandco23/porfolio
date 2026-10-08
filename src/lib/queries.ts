@@ -99,7 +99,15 @@ export const getPublishedArticleSlugs = publicCache("article-sitemap", async () 
 export const getSiteContent = publicCache("site-content-v1", async () => {
   const { resolveSiteContent } = await import("@/lib/site-content");
   const row = await prisma.siteContent.findUnique({ where: { id: "default" } });
-  return resolveSiteContent(row?.data);
+  const copy = resolveSiteContent(row?.data);
+  if (!Object.keys(copy).some((key) => key.includes(":entity."))) return copy;
+  const [projects, articles, moments] = await Promise.all([
+    prisma.project.findMany({ where: { status: "PUBLISHED" }, select: { id: true } }),
+    prisma.article.findMany({ where: { status: "PUBLISHED" }, select: { id: true } }),
+    prisma.moment.findMany({ where: { status: "PUBLISHED" }, select: { id: true } }),
+  ]);
+  const { publicTranslations } = await import("./translations");
+  return publicTranslations(copy, { project: new Set(projects.map((p) => p.id)), article: new Set(articles.map((a) => a.id)), moment: new Set(moments.map((m) => m.id)) });
 });
 
 export const getPublishedMoments = publicCache("published-moments", async (take?: number) => {

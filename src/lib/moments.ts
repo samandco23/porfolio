@@ -28,10 +28,12 @@ export const momentSchema = z.object({
   content: z.string().trim().max(20000).default(""),
   date: z.string().refine((value) => {
     if (!value) return true;
+    if (/^(19|20|21)\d{2}$/.test(value)) return true;
+    if (/^(19|20|21)\d{2}-(0[1-9]|1[0-2])$/.test(value)) return true;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
     const parsed = new Date(`${value}T00:00:00Z`);
     return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
-  }, "Use a valid calendar date").default(""),
+  }, "Use a year, month (YYYY-MM) or calendar date (YYYY-MM-DD)").default(""),
   location: z.string().trim().max(120).default(""),
   album: z.string().trim().max(80).default(""),
   coverUrl: webUrl.or(z.literal("")).default(""),

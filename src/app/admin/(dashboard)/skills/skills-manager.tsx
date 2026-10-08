@@ -62,7 +62,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
       {/* Add form */}
       <form
         onSubmit={form.handleSubmit(onCreate)}
-        className="grid gap-4 border border-zinc-800 bg-[#0a0a0a] p-5 sm:grid-cols-2"
+        className="grid gap-4 border border-zinc-800 bg-base-400 p-5 sm:grid-cols-2"
       >
         <div>
           <label htmlFor="skill-name" className="label-dark">Name</label>
@@ -98,7 +98,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
       </form>
 
       {state.message && (
-        <p className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+        <p className={`font-mono text-xs ${state.ok ? "text-accent" : "text-red-400"}`}>
           {state.ok ? "✓ " : "✗ "}
           {state.message}
         </p>
@@ -111,7 +111,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
 
         return (
           <div key={category}>
-            <h3 className="font-mono text-micro uppercase tracking-[0.18em] text-[#00FF66]">
+            <h3 className="font-mono text-micro uppercase tracking-[0.18em] text-accent">
               {SKILL_CATEGORY_LABELS[category]}
             </h3>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -131,7 +131,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
                   <div
                     key={skill.id}
                     className={cn(
-                      "flex items-center gap-3 border bg-[#0a0a0a] px-4 py-2.5",
+                      "flex items-center gap-3 border bg-base-400 px-4 py-2.5",
                       skill.isVisible ? "border-zinc-800" : "border-dashed border-zinc-800",
                     )}
                   >
@@ -139,7 +139,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
                       {skill.name}
                     </span>
                     {skill.level !== null && <span className="font-mono text-[11px] text-zinc-600">{skill.level}%</span>}
-                    <button type="button" disabled={pending} aria-label={`Toggle ${skill.name} in main stack`} onClick={() => updateField(skill, { featured: !skill.featured })} className={skill.featured ? "text-[#00FF66]" : "text-zinc-600"}><Star className="h-3.5 w-3.5" /></button>
+                    <button type="button" disabled={pending} aria-label={`Toggle ${skill.name} in main stack`} onClick={() => updateField(skill, { featured: !skill.featured })} className={skill.featured ? "text-accent" : "text-zinc-600"}><Star className="h-3.5 w-3.5" /></button>
                     <button
                       type="button"
                       onClick={() => setEditingId(skill.id)}
@@ -152,7 +152,7 @@ export function SkillsManager({ skills }: { skills: SkillRecord[] }) {
                       type="button"
                       onClick={() => updateField(skill, { isVisible: !skill.isVisible })}
                       disabled={pending}
-                      className="p-1 text-zinc-600 hover:text-[#00FF66]"
+                      className="p-1 text-zinc-600 hover:text-accent"
                       aria-label={`Toggle ${skill.name} visibility`}
                     >
                       {skill.isVisible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
@@ -198,7 +198,7 @@ function SkillEditRow({
   const [category, setCategory] = useState(skill.category);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 border border-[#00FF66]/40 bg-[#0a0a0a] px-3 py-2">
+    <div className="flex flex-wrap items-center gap-2 border border-accent/40 bg-base-400 px-3 py-2">
       <input
         className="input-dark flex-1"
         aria-label="Skill name"
@@ -227,7 +227,7 @@ function SkillEditRow({
         type="button"
         disabled={pending}
         onClick={() => onSave({ name, level: level === "" ? null : Number(level), category, order, iconKey } as Partial<SkillInput>)}
-        className="p-1.5 text-[#00FF66]"
+        className="p-1.5 text-accent"
         aria-label="Save"
       >
         <Save className="h-4 w-4" />

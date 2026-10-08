@@ -11,6 +11,9 @@ describe("moments and galleries", () => {
     expect(momentSchema.safeParse({ ...entry, date: "2024-02-29" }).success).toBe(true);
     expect(momentSchema.safeParse({ ...entry, date: "2026-02-29" }).success).toBe(false);
     expect(momentSchema.safeParse({ ...entry, date: "" }).success).toBe(true);
+    expect(momentSchema.safeParse({ ...entry, date: "2025" }).success).toBe(true);
+    expect(momentSchema.safeParse({ ...entry, date: "2025-04" }).success).toBe(true);
+    expect(momentSchema.safeParse({ ...entry, date: "2025-13" }).success).toBe(false);
   });
   it("retains captions through gallery serialization", () => {
     const text = "https://example.com/a.jpg | First photo\nhttps://example.com/b.jpg";

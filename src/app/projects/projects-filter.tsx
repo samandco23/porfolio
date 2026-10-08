@@ -24,7 +24,7 @@ export function ProjectsFilter({
         className={cn(
           "border px-3 py-1 font-mono text-xs transition-colors",
           active === null
-            ? "border-[#00FF66]/60 bg-[#00FF66]/10 text-[#00FF66]"
+            ? "border-accent/60 bg-accent/10 text-accent"
             : "border-zinc-800 text-zinc-500 hover:text-zinc-300",
         )}
       > <SiteText name="app.projects.projects-filter.1" /> </button>
@@ -35,7 +35,7 @@ export function ProjectsFilter({
           className={cn(
             "border px-3 py-1 font-mono text-xs transition-colors",
             active === tag
-              ? "border-[#00FF66]/60 bg-[#00FF66]/10 text-[#00FF66]"
+              ? "border-accent/60 bg-accent/10 text-accent"
               : "border-zinc-800 text-zinc-500 hover:text-zinc-300",
           )}
         >

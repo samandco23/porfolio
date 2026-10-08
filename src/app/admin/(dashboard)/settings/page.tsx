@@ -1,3 +1,7 @@
+import { TranslationsForm, type TranslationSource } from "./translations-form";
+import { TRANSLATED_FIELDS } from "@/lib/translations";
+import { parseProjectContent } from "@/lib/project-content";
+import { parseMomentPhotos } from "@/lib/moments";
 import { SiteContentForm } from "./site-content-form";
 import { resolveSiteContent } from "@/lib/site-content";
 import { prisma } from "@/lib/db";
@@ -10,12 +14,22 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin — Profile & Settings" };
 
 export default async function AdminSettingsPage() {
-  const [profile, socialLinks, siteContent] = await Promise.all([
+  const [profile, socialLinks, siteContent, projects, articles, moments] = await Promise.all([
     getProfileSafe(),
     prisma.socialLink.findMany({ orderBy: { order: "asc" } }),
     prisma.siteContent.findUnique({ where: { id: "default" } }),
+    prisma.project.findMany({ orderBy: { order: "asc" } }),
+    prisma.article.findMany({ orderBy: { createdAt: "desc" } }),
+    prisma.moment.findMany({ orderBy: { order: "asc" } }),
   ]);
 
+  const fields = (row: object, names: readonly string[]) => Object.fromEntries(names.map((field) => [field, String((row as Record<string, unknown>)[field] ?? "")]));
+  const sources: TranslationSource[] = [
+    { kind: "profile", id: "default", title: profile.fullName, fields: fields(profile, TRANSLATED_FIELDS.profile) },
+    ...projects.map((row) => { const { content, details } = parseProjectContent(row.content); return { kind: "project" as const, id: row.id, title: row.title, fields: fields({ ...row, ...details, content }, TRANSLATED_FIELDS.project) }; }),
+    ...articles.map((row) => ({ kind: "article" as const, id: row.id, title: row.title, fields: fields(row, TRANSLATED_FIELDS.article) })),
+    ...moments.map((row) => ({ kind: "moment" as const, id: row.id, title: row.title, fields: { ...fields(row, TRANSLATED_FIELDS.moment), ...Object.fromEntries(parseMomentPhotos(row.images).map((photo, index) => [`photo-${index}`, photo.caption])) } })),
+  ];
   return (
     <div className="max-w-4xl space-y-10">
       <div>
@@ -29,13 +43,14 @@ export default async function AdminSettingsPage() {
       <section className="border-y border-zinc-800 py-6">
         <h2 className="font-mono text-lg text-white">Connected services</h2>
         <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
-          <div><dt className="text-zinc-400">Image uploads</dt><dd className="mt-1 text-[#00FF66]">{imageUploadConfigured() ? "Cloudinary connected" : "Not connected · image URLs still work"}</dd></div>
-          <div><dt className="text-zinc-400">Contact notifications</dt><dd className="mt-1 text-[#00FF66]">{contactNotificationsConfigured() ? "Email notifications enabled" : "Not connected · messages stay in your inbox"}</dd></div>
+          <div><dt className="text-zinc-400">Image uploads</dt><dd className="mt-1 text-accent">{imageUploadConfigured() ? "Cloudinary connected" : "Not connected · image URLs still work"}</dd></div>
+          <div><dt className="text-zinc-400">Contact notifications</dt><dd className="mt-1 text-accent">{contactNotificationsConfigured() ? "Email notifications enabled" : "Not connected · messages stay in your inbox"}</dd></div>
         </dl>
       </section>
       <ProfileForm profile={profile} uploadEnabled={imageUploadConfigured()} />
       <SocialLinksManager socialLinks={serializableLinks(socialLinks)} />
       <SiteContentForm content={resolveSiteContent(siteContent?.data)} />
+      <TranslationsForm sources={sources} content={resolveSiteContent(siteContent?.data)} />
     </div>
   );
 }

@@ -20,14 +20,14 @@ export function ProjectRow({ adminBase, project }: { adminBase: string; project:
 
   return (
     <div
-      className={`flex items-center gap-4 border bg-[#0a0a0a] px-4 py-3 ${
+      className={`flex items-center gap-4 border bg-base-400 px-4 py-3 ${
         project.status === "PUBLISHED" ? "border-zinc-800" : "border-dashed border-zinc-800"
       }`}
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <Link            href={`${adminBase}/projects/${project.id}`}
-            className="truncate font-mono text-sm text-zinc-200 hover:text-[#00FF66]">
+            className="truncate font-mono text-sm text-zinc-200 hover:text-accent">
             {project.title}
           </Link>
           {project.status === "DRAFT" && (
@@ -52,7 +52,7 @@ export function ProjectRow({ adminBase, project }: { adminBase: string; project:
         title="Toggle featured"
         aria-label={`Toggle ${project.title} featured status`}
         aria-pressed={project.featured}
-        className={`p-1.5 ${project.featured ? "text-[#00FF66]" : "text-zinc-700 hover:text-zinc-400"}`}
+        className={`p-1.5 ${project.featured ? "text-accent" : "text-zinc-700 hover:text-zinc-400"}`}
       >
         <Star className="h-4 w-4" fill={project.featured ? "currentColor" : "none"} />
       </button>

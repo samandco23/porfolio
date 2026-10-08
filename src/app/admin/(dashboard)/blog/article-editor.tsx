@@ -147,7 +147,7 @@ export function ArticleEditor({ article, uploadEnabled = false, adminBase }: {
         </button>
         {article?.id && <a href={`${adminBase}/blog/${article.id}/preview`} target="_blank" rel="noopener noreferrer" className="btn-ghost">Preview saved version</a>}
         {state.message && (
-          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-accent" : "text-red-400"}`}>
             {state.ok ? "✓ " : "✗ "}
             {state.message}
           </p>

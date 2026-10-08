@@ -211,7 +211,7 @@ model Moment {
   kind        MomentKind    @default(MEMORY)
   description String        @default("")
   content     String        @default("")
-  date        String?       // Calendar date (YYYY-MM-DD), no timezone conversion
+  date        String?       // Year, month or date (YYYY / YYYY-MM / YYYY-MM-DD)
   location    String?
   album       String?
   coverUrl    String?

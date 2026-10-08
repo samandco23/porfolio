@@ -7,20 +7,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        base: {
-          50: "#050505",
-          400: "#0a0a0a",
-          800: "#101010",
-          950: "#050505",
-        },
-        accent: {
-          DEFAULT: "#00FF66",
-          dim: "#00cc52",
-          muted: "rgba(0, 255, 102, 0.10)",
-        },
+        base: { 50: "rgb(var(--surface) / <alpha-value>)", 400: "rgb(var(--surface-raised) / <alpha-value>)", 800: "rgb(var(--surface-raised) / <alpha-value>)", 950: "rgb(var(--surface) / <alpha-value>)" },
+        accent: { DEFAULT: "rgb(var(--accent) / <alpha-value>)", dim: "rgb(var(--accent) / <alpha-value>)", muted: "rgb(var(--accent) / 0.10)" },
+        white: "rgb(var(--foreground) / <alpha-value>)",
+        black: "rgb(var(--panel) / <alpha-value>)",
+        red: { 400: "rgb(var(--danger) / <alpha-value>)" },
+        zinc: Object.fromEntries([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map((shade) => [shade, `rgb(var(--zinc-${shade}) / <alpha-value>)`])),
       },
       borderColor: {
-        DEFAULT: "#27272a", // zinc-800
+        DEFAULT: "rgb(var(--zinc-800) / 1)", // zinc-800
       },
       fontFamily: {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],

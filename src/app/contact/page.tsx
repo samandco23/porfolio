@@ -1,7 +1,7 @@
 
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
-import { getProfile, getSiteContent } from "@/lib/queries";
+import { getProfile, getSiteContent } from "@/lib/localized-queries";
 import { ContactForm } from "./contact-form";
 
 export async function generateMetadata() {
@@ -26,7 +26,7 @@ export default async function ContactPage() {
           <div className="mt-4 space-y-3 font-mono text-sm">
             <p className="text-zinc-400">
               <span className="text-zinc-600"> <SiteText name="app.contact.page.5" /> </span>{" "}
-              <a href={`mailto:${profile?.email}`} className="text-[#00FF66] hover:underline">
+              <a href={`mailto:${profile?.email}`} className="text-accent hover:underline">
                 {profile?.email}
               </a>
             </p>
@@ -35,7 +35,7 @@ export default async function ContactPage() {
                 <span className="text-zinc-600"> <SiteText name="app.contact.page.6" /> </span>{" "}
                 <a
                   href={`tel:${profile.phone.replace(/[^\d+]/g, "")}`}
-                  className="text-[#00FF66] hover:underline"
+                  className="text-accent hover:underline"
                 >
                   {profile.phone}
                 </a>
@@ -48,7 +48,7 @@ export default async function ContactPage() {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#00FF66] hover:underline"
+                  className="text-accent hover:underline"
                 >
                   {link.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                 </a>

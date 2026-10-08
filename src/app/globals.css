@@ -5,10 +5,48 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --surface: 5 5 5;
+    --surface-raised: 10 10 10;
+    --panel: 0 0 0;
+    --foreground: 255 255 255;
+    --accent: 0 255 102;
+    --danger: 248 113 113;
+    --zinc-50: 250 250 250;
+    --zinc-100: 244 244 245;
+    --zinc-200: 228 228 231;
+    --zinc-300: 212 212 216;
+    --zinc-400: 161 161 170;
+    --zinc-500: 113 113 122;
+    --zinc-600: 82 82 91;
+    --zinc-700: 63 63 70;
+    --zinc-800: 39 39 42;
+    --zinc-900: 24 24 27;
+    --zinc-950: 9 9 11;
 
     /* Self-hosted fontsource variable fonts (imported in layout.tsx). */
     --font-sans: "Inter Variable", system-ui, sans-serif;
     --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --surface: 248 250 249;
+    --surface-raised: 255 255 255;
+    --panel: 255 255 255;
+    --foreground: 17 24 20;
+    --accent: 0 109 44;
+    --danger: 185 28 28;
+    --zinc-50: 9 9 11;
+    --zinc-100: 24 24 27;
+    --zinc-200: 39 39 42;
+    --zinc-300: 51 55 53;
+    --zinc-400: 71 77 73;
+    --zinc-500: 82 88 84;
+    --zinc-600: 100 107 102;
+    --zinc-700: 148 155 150;
+    --zinc-800: 203 211 205;
+    --zinc-900: 226 232 228;
+    --zinc-950: 241 245 242;
   }
 
   html {
@@ -27,12 +65,12 @@
   }
 
   body {
-    @apply bg-[#050505] text-zinc-300 antialiased;
+    @apply bg-base-950 text-zinc-300 antialiased;
   }
 
   ::selection {
-    background: rgba(0, 255, 102, 0.25);
-    color: #ffffff;
+    background: rgb(var(--accent) / 0.25);
+    color: rgb(var(--foreground));
   }
 
   /* Terminal-style scrollbar */
@@ -41,14 +79,14 @@
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #0a0a0a;
+    background: rgb(var(--surface-raised));
   }
   ::-webkit-scrollbar-thumb {
-    background: #27272a;
-    border: 2px solid #0a0a0a;
+    background: rgb(var(--zinc-800));
+    border: 2px solid rgb(var(--surface-raised));
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46;
+    background: rgb(var(--zinc-700));
   }
 }
 
@@ -56,8 +94,8 @@
   /* ── Typography helpers ─────────────────────────────── */
   .text-glow {
     text-shadow:
-      0 0 12px rgba(0, 255, 102, 0.45),
-      0 0 40px rgba(0, 255, 102, 0.15);
+      0 0 12px rgb(var(--accent) / 0.45),
+      0 0 40px rgb(var(--accent) / 0.15);
   }
 
   /* ── Section heading with terminal prompt ───────────── */
@@ -72,7 +110,7 @@
 
   /* ── Buttons ────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex items-center gap-2 border border-[#00FF66]/60 bg-[#00FF66]/10 px-5 py-2.5 font-mono text-sm text-[#00FF66] transition-colors hover:bg-[#00FF66]/20 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center gap-2 border border-accent/60 bg-accent/10 px-5 py-2.5 font-mono text-sm text-accent transition-colors hover:bg-accent/20 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-ghost {
@@ -85,7 +123,7 @@
 
   /* ── Form fields (admin) ────────────────────────────── */
   .input-dark {
-    @apply w-full border border-zinc-800 bg-black/60 px-3 py-2 font-mono text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-[#00FF66]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00FF66];
+    @apply w-full border border-zinc-800 bg-black/60 px-3 py-2 font-mono text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
   }
 
   .label-dark {
@@ -93,14 +131,14 @@
   }
 
   .card-dark {
-    @apply border border-zinc-800 bg-[#0a0a0a];
+    @apply border border-zinc-800 bg-base-400;
   }
 
   /* ── Grid backdrop for hero sections ────────────────── */
   .grid-backdrop {
     background-image:
-      linear-gradient(rgba(0, 255, 102, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 102, 0.04) 1px, transparent 1px);
+      linear-gradient(rgb(var(--accent) / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--accent) / 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
@@ -118,7 +156,7 @@
     @apply my-4;
   }
   .prose-dark a {
-    @apply text-[#00FF66] underline decoration-[#00FF66]/30 underline-offset-4 hover:decoration-[#00FF66];
+    @apply text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent;
   }
   .prose-dark strong {
     @apply text-white;
@@ -133,7 +171,7 @@
     @apply pl-1;
   }
   .prose-dark code {
-    @apply border border-zinc-800 bg-black px-1.5 py-0.5 font-mono text-[0.85em] text-[#00FF66];
+    @apply border border-zinc-800 bg-black px-1.5 py-0.5 font-mono text-[0.85em] text-accent;
   }
   .prose-dark pre {
     @apply my-5 overflow-x-auto border border-zinc-800 bg-black p-4;
@@ -142,7 +180,7 @@
     @apply border-0 bg-transparent p-0 text-zinc-300;
   }
   .prose-dark blockquote {
-    @apply my-5 border-l-2 border-[#00FF66]/50 bg-[#00FF66]/5 px-4 py-2 text-zinc-400 italic;
+    @apply my-5 border-l-2 border-accent/50 bg-accent/5 px-4 py-2 text-zinc-400 italic;
   }
   .prose-dark img {
     @apply my-6 border border-zinc-800;

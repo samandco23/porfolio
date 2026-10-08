@@ -17,7 +17,7 @@ export default async function PreviewProject({ params }: { params: Promise<{ id:
   return <>
     <div className="border-b border-zinc-800 pb-4 font-mono text-sm text-zinc-400">
       Private preview · {project.status === "DRAFT" ? "Draft" : "Published"} ·{" "}
-      <Link href={`${getAdminPath()}/projects/${id}`} className="text-[#00FF66] hover:underline">Back to editor</Link>
+      <Link href={`${getAdminPath()}/projects/${id}`} className="text-accent hover:underline">Back to editor</Link>
     </div>
     <ProjectDetail project={{ ...project, tagList: parseTags(project.tags) }} preview />
   </>;

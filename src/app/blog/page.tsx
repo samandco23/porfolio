@@ -2,7 +2,7 @@
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
-import { getPublishedArticles, getSiteContent } from "@/lib/queries";
+import { getPublishedArticles, getSiteContent } from "@/lib/localized-queries";
 import { formatDate } from "@/lib/utils";
 import { TagList } from "@/components/tag-list";
 import { Reveal } from "@/components/motion/reveal";
@@ -26,7 +26,7 @@ export default async function BlogPage() {
             <article className="group border-b border-zinc-800 py-8">
               <Link href={`/blog/${article.slug}`} className="block">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="font-mono text-xl text-zinc-100 transition-colors group-hover:text-[#00FF66]">
+                  <h2 className="font-mono text-xl text-zinc-100 transition-colors group-hover:text-accent">
                     {article.title}
                   </h2>
                   <time className="font-mono text-xs text-zinc-600">

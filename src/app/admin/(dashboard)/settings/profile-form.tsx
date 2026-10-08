@@ -103,7 +103,7 @@ export function ProfileForm({ profile, uploadEnabled = false }: { profile: Profi
         </Field>
         <Field label="Availability">
           <label className="flex cursor-pointer items-center gap-3 font-mono text-sm text-zinc-300">
-            <input type="checkbox" className="h-4 w-4 accent-[#00FF66]" {...register("available")} />
+            <input type="checkbox" className="h-4 w-4 accent-accent" {...register("available")} />
             Show &quot;Open to work&quot; badge on the site
           </label>
         </Field>
@@ -148,7 +148,7 @@ export function ProfileForm({ profile, uploadEnabled = false }: { profile: Profi
           <Save className="h-4 w-4" /> {pending ? "Saving..." : "Save profile"}
         </button>
         {state.message && (
-          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-accent" : "text-red-400"}`}>
             {state.ok ? "✓ " : "✗ "}
             {state.message}
           </p>

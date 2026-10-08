@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { getProfile } from "@/lib/queries";
+import { readPreferences } from "./server-preferences";
+import { normalizeLocale } from "./preferences";
+import { getProfile, getSiteContent } from "@/lib/queries";
 import { getSiteUrl } from "@/lib/site-url";
 import { SITE_NAME } from "@/lib/constants";
 
@@ -8,11 +10,13 @@ export async function pageMetadata({ title, description, path, kind = "site", sl
   kind?: "site" | "project" | "article" | "moment"; slug?: string;
   publishedAt?: Date | string | null; updatedAt?: Date | string;
 }): Promise<Metadata> {
-  const profile = await getProfile();
+  const [profile, copy] = await Promise.all([getProfile(), getSiteContent()]);
+  const { locale } = await readPreferences(normalizeLocale(copy["site.language"]));
   const origin = profile?.siteUrl ? new URL(profile.siteUrl) : getSiteUrl();
   const url = new URL(path, origin).toString();
   const image = new URL("/api/og", origin);
   image.searchParams.set("kind", kind);
+  image.searchParams.set("lang", locale);
   if (slug) image.searchParams.set("slug", slug);
   const images = [{ url: image.toString(), width: 1200, height: 630, alt: title }];
   const common = { title, description, url, siteName: profile?.siteName || profile?.fullName || SITE_NAME, images };
@@ -23,7 +27,7 @@ export async function pageMetadata({ title, description, path, kind = "site", sl
       publishedTime: publishedAt ? new Date(publishedAt).toISOString() : undefined,
       modifiedTime: updatedAt ? new Date(updatedAt).toISOString() : undefined,
       authors: profile?.fullName ? [profile.fullName] : undefined,
-    } : { ...common, type: "website" },
+    } : { ...common, type: "website", locale: locale === "fr" ? "fr_FR" : "en_US" },
     twitter: { card: "summary_large_image", title, description, images: [image.toString()] },
   };
 }

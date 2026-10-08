@@ -78,7 +78,7 @@ export default async function AdminDashboardPage() {
             <p className="section-label">{"// total content views"}</p>
             <Eye className="h-4 w-4 text-zinc-600" />
           </div>
-          <p className="mt-2 font-mono text-3xl text-[#00FF66]">{totalViews}</p>
+          <p className="mt-2 font-mono text-3xl text-accent">{totalViews}</p>
           <p className="mt-1 font-mono text-[11px] text-zinc-600">
             {projectViews._sum.views ?? 0} projects · {articleViews._sum.views ?? 0} articles
           </p>
@@ -91,7 +91,7 @@ export default async function AdminDashboardPage() {
           {topProjects[0] ? (
             <Link
               href={`/projects/${topProjects[0].slug}`}
-              className="mt-2 block font-mono text-lg text-zinc-200 hover:text-[#00FF66]"
+              className="mt-2 block font-mono text-lg text-zinc-200 hover:text-accent"
             >
               {topProjects[0].title}
             </Link>
@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
             <p className="section-label">{"// latest messages"}</p>
             <Link
               href={`${base}/messages`}
-              className="inline-flex items-center gap-1 font-mono text-xs text-zinc-500 hover:text-[#00FF66]"
+              className="inline-flex items-center gap-1 font-mono text-xs text-zinc-500 hover:text-accent"
             >
               inbox <ArrowRight className="h-3 w-3" />
             </Link>
@@ -124,7 +124,7 @@ export default async function AdminDashboardPage() {
               <div key={m.id} className="flex items-center justify-between px-5 py-3">
                 <div className="min-w-0">
                   <p className="truncate font-mono text-sm text-zinc-300">
-                    {m.status === "UNREAD" && <span className="mr-2 text-[#00FF66]">●</span>}
+                    {m.status === "UNREAD" && <span className="mr-2 text-accent">●</span>}
                     {m.name} <span className="text-zinc-600">— {m.subject || "(no subject)"}</span>
                   </p>
                 </div>
@@ -190,11 +190,11 @@ function StatCard({
     <Link href={href} className="card-dark block p-5 transition-colors hover:border-zinc-600">
       <div className="flex items-center justify-between">
         <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">{label}</p>
-        <Icon className={`h-4 w-4 ${highlight ? "text-[#00FF66]" : "text-zinc-600"}`} />
+        <Icon className={`h-4 w-4 ${highlight ? "text-accent" : "text-zinc-600"}`} />
       </div>
       <p
         className={`mt-2 font-mono text-3xl ${
-          highlight ? "text-[#00FF66] text-glow" : "text-white"
+          highlight ? "text-accent text-glow" : "text-white"
         }`}
       >
         {value}

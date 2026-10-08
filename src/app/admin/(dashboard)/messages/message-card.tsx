@@ -20,8 +20,8 @@ export function MessageCard({ message }: { message: MessageRecord }) {
 
   return (
     <div
-      className={`border bg-[#0a0a0a] ${
-        unread ? "border-[#00FF66]/40" : "border-zinc-800"
+      className={`border bg-base-400 ${
+        unread ? "border-accent/40" : "border-zinc-800"
       }`}
     >
       <button
@@ -30,7 +30,7 @@ export function MessageCard({ message }: { message: MessageRecord }) {
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center gap-3 px-4 py-3 text-left"
       >
-        <span className={`h-2 w-2 shrink-0 rounded-full ${unread ? "bg-[#00FF66]" : "bg-zinc-700"}`} />
+        <span className={`h-2 w-2 shrink-0 rounded-full ${unread ? "bg-accent" : "bg-zinc-700"}`} />
         <div className="min-w-0 flex-1">
           <p className={`truncate font-mono text-sm ${unread ? "text-white" : "text-zinc-400"}`}>
             {message.name} <span className="text-zinc-600">· {message.subject || "(no subject)"}</span>

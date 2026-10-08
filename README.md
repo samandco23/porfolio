@@ -243,6 +243,18 @@ Une sauvegarde dans le panel invalide immédiatement le cache public. Après un 
 
 ### Événements, souvenirs et galerie
 
-La page `/moments` filtre les contenus publiés par type (événement, souvenir, galerie) et par album. Le panel **Events & Gallery** permet de créer, modifier, publier ou supprimer une entrée, avec date facultative, lieu, album, résumé, récit Markdown, couverture et jusqu'à vingt photos légendées. Une sélection **Feature on homepage** alimente l'accueil ; les brouillons restent privés. Les photos peuvent être ajoutées par URL ou via Cloudinary si le service est configuré. Les titres, textes et filtres de la rubrique sont éditables dans **Public site content**. Le seeder ne crée aucun événement ou souvenir fictif.
+La page `/moments` filtre les contenus publiés par type (événement, souvenir, galerie) et par album. Le panel **Events & Gallery** permet de créer, modifier, publier ou supprimer une entrée, avec date facultative, lieu, album, résumé, récit Markdown, couverture et jusqu'à vingt photos légendées. Une sélection **Feature on homepage** alimente l'accueil ; les brouillons restent privés. Les photos peuvent être ajoutées par URL ou via Cloudinary si le service est configuré. Les titres, textes et filtres de la rubrique sont éditables dans **Public site content**. Le seeder ajoute uniquement les fiches sourcées du Hacking Challenge GetSmarter (publiée) et de SMI-CYBER 2025 (note de veille en brouillon). Il ne crée aucun souvenir fictif.
 
 Vérification du seed sans écriture : `npm run db:seed -- -- --verify-only`.
+
+### Langues et thèmes
+
+Les sélecteurs du header proposent **FR / EN** et **clair / sombre / automatique**, sur mobile comme sur ordinateur. Les choix sont conservés pendant un an dans des cookies de préférence. Le mode automatique suit le système et est appliqué avant le premier affichage. Le thème couvre aussi le panel et conserve les couleurs naturelles des photos.
+
+Dans **Profile & Settings**, **Public site content** permet d'éditer les deux langues de l'interface et les valeurs par défaut `site.language` / `site.theme`. **Content translations** gère les biographies, projets, articles, événements et légendes photo. Une traduction vide reprend le texte original. Les traductions de brouillons sont exclues des données envoyées aux visiteurs. Les lectures de langue restent hors du cache partagé pour éviter de mélanger les visiteurs.
+
+`npm run db:translations` ajoute les traductions des contenus fournis via DIRECT_URL, sans réinitialiser les projets ni les comptes et en conservant les textes personnalisés. Une nouvelle exécution du seeder sur une base neuve prépare aussi les traductions.
+
+La rubrique Moments propose une vue chronologique et une galerie. Une date peut être précise au jour, au mois ou à l'année, selon les informations disponibles.
+
+`npm run db:moments` ajoute ces deux fiches et leurs traductions sans réinitialiser le profil ni remplacer les événements modifiés dans le panel. La fiche SMI-CYBER ne présume aucune participation personnelle.

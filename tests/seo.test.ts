@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { pageMetadata, serializeJsonLd } from "@/lib/seo";
 import { GET } from "@/app/api/og/route";
 
+vi.mock("next/headers", () => ({ cookies: vi.fn().mockResolvedValue({ get: () => undefined }) }));
 vi.mock("@/lib/queries", () => ({
   getSiteContent: vi.fn().mockResolvedValue({ "og.site": "Build · Secure · Scale" }),
   getProfile: vi.fn().mockResolvedValue({ fullName: "Portfolio Owner", shortBio: "Projects and ideas." }),
@@ -17,7 +18,7 @@ describe("public metadata", () => {
     const metadata = await pageMetadata({ title: "My project", description: "A project description.", path: "/projects/my-project", kind: "project", slug: "my-project" });
     expect(metadata.alternates?.canonical).toBe("https://example.com/projects/my-project");
     expect(metadata.twitter).toEqual(expect.objectContaining({
-      card: "summary_large_image", images: ["https://example.com/api/og?kind=project&slug=my-project"],
+      card: "summary_large_image", images: ["https://example.com/api/og?kind=project&lang=fr&slug=my-project"],
     }));
   });
 

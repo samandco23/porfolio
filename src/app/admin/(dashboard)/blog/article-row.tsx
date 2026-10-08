@@ -17,14 +17,14 @@ type Row = {
 export function ArticleRow({ adminBase, article }: { adminBase: string; article: Row }) {
   return (
     <div
-      className={`flex items-center gap-4 border bg-[#0a0a0a] px-4 py-3 ${
+      className={`flex items-center gap-4 border bg-base-400 px-4 py-3 ${
         article.status === "PUBLISHED" ? "border-zinc-800" : "border-dashed border-zinc-800"
       }`}
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <Link            href={`${adminBase}/blog/${article.id}`}
-            className="truncate font-mono text-sm text-zinc-200 hover:text-[#00FF66]">
+            className="truncate font-mono text-sm text-zinc-200 hover:text-accent">
             {article.title}
           </Link>
           {article.status === "DRAFT" && (

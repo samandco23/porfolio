@@ -1,3 +1,5 @@
+import { localizedContent, normalizeLocale } from "@/lib/preferences";
+import { translateRecord } from "@/lib/translations";
 import { ImageResponse } from "next/og";
 import { getProfile, getProjectBySlug, getArticleBySlug, getSiteContent, getMomentBySlug } from "@/lib/queries";
 import { SITE_NAME } from "@/lib/constants";
@@ -11,9 +13,13 @@ export async function GET(request: Request) {
   if (!["site", "project", "article", "moment"].includes(kind) || slug.length > 96) {
     return new Response(null, { status: 400 });
   }
-  const [profile, content] = await Promise.all([getProfile(), getSiteContent()]);
-  const item = kind === "project" ? await getProjectBySlug(slug)
+  const [rawProfile, rawContent] = await Promise.all([getProfile(), getSiteContent()]);
+  const locale = normalizeLocale(params.get("lang"), normalizeLocale(rawContent["site.language"]));
+  const content = localizedContent(rawContent, locale);
+  const profile = rawProfile ? translateRecord(rawProfile, "profile", locale, rawContent) : null;
+  const rawItem = kind === "project" ? await getProjectBySlug(slug)
     : kind === "article" ? await getArticleBySlug(slug) : kind === "moment" ? await getMomentBySlug(slug) : null;
+  const item = rawItem ? translateRecord(rawItem, kind === "project" ? "project" : kind === "article" ? "article" : "moment", locale, rawContent) : null;
   if (kind !== "site" && !item) return new Response(null, { status: 404 });
   const title = item?.title || profile?.seoTitle || profile?.fullName || SITE_NAME;
   const description = item

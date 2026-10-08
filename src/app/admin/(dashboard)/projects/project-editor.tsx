@@ -158,7 +158,7 @@ export function ProjectEditor({ project, uploadEnabled = false, adminBase }: {
           </Field>
           <Field label="Featured">
             <label className="flex cursor-pointer items-center gap-3 font-mono text-sm text-zinc-300">
-              <input type="checkbox" className="h-4 w-4 accent-[#00FF66]" {...register("featured")} />
+              <input type="checkbox" className="h-4 w-4 accent-accent" {...register("featured")} />
               Show on home page
             </label>
           </Field>
@@ -192,7 +192,7 @@ export function ProjectEditor({ project, uploadEnabled = false, adminBase }: {
         </button>
         {project?.id && <a href={`${adminBase}/projects/${project.id}/preview`} target="_blank" rel="noopener noreferrer" className="btn-ghost">Preview saved version</a>}
         {state.message && (
-          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+          <p role="status" aria-live="polite" className={`font-mono text-xs ${state.ok ? "text-accent" : "text-red-400"}`}>
             {state.ok ? "✓ " : "✗ "}
             {state.message}
           </p>

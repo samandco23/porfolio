@@ -47,13 +47,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link
                 key={href}
                 href={href}
-                className="flex items-center justify-between border border-transparent px-3 py-2 font-mono text-sm text-zinc-400 transition-colors hover:border-zinc-800 hover:bg-[#0a0a0a] hover:text-white"
+                className="flex items-center justify-between border border-transparent px-3 py-2 font-mono text-sm text-zinc-400 transition-colors hover:border-zinc-800 hover:bg-base-400 hover:text-white"
               >
                 <span className="flex items-center gap-2.5">
                   <Icon className="h-4 w-4" /> {label}
                 </span>
                 {href === `${base}/messages` && unread > 0 && (
-                  <span className="border border-[#00FF66]/50 bg-[#00FF66]/10 px-1.5 py-0.5 font-mono text-[10px] text-[#00FF66]">
+                  <span className="border border-accent/50 bg-accent/10 px-1.5 py-0.5 font-mono text-[10px] text-accent">
                     {unread}
                   </span>
                 )}
@@ -67,7 +67,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </p>
             <Link
               href="/"
-              className="mt-2 flex items-center gap-2 px-3 py-1.5 font-mono text-xs text-zinc-500 hover:text-[#00FF66]"
+              className="mt-2 flex items-center gap-2 px-3 py-1.5 font-mono text-xs text-zinc-500 hover:text-accent"
             >
               <ExternalLink className="h-3.5 w-3.5" /> View site
             </Link>

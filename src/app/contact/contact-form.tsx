@@ -29,7 +29,7 @@ export function ContactForm() {
               placeholder={content["contact.namePlaceholder"]}
             />
             {state.errors?.name && (
-              <p className="mt-1 font-mono text-xs text-red-400">{state.errors.name}</p>
+              <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.name"]}</p>
             )}
           </div>
           <div>
@@ -45,7 +45,7 @@ export function ContactForm() {
               placeholder={content["contact.emailPlaceholder"]}
             />
             {state.errors?.email && (
-              <p className="mt-1 font-mono text-xs text-red-400">{state.errors.email}</p>
+              <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.email"]}</p>
             )}
           </div>
         </div>
@@ -74,7 +74,7 @@ export function ContactForm() {
             placeholder={content["contact.bodyPlaceholder"]}
           />
           {state.errors?.body && (
-            <p className="mt-1 font-mono text-xs text-red-400">{state.errors.body}</p>
+            <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.body"]}</p>
           )}
         </div>
 
@@ -92,7 +92,7 @@ export function ContactForm() {
           {state.message && (
             <p
               className={`font-mono text-xs ${
-                state.ok ? "text-[#00FF66]" : "text-red-400"
+                state.ok ? "text-accent" : "text-red-400"
               }`}
               role="status"
               aria-live="polite"

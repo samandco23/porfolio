@@ -10,7 +10,7 @@ import { TagList } from "@/components/tag-list";
 export function ArticleDetail({ article, preview = false }: { article: Article & { tagList: string[] }; preview?: boolean }) {
   const date = article.publishedAt ?? article.createdAt;
   return <article className="mx-auto max-w-3xl px-6 py-16 md:py-24">
-    {!preview && <Link href="/blog" className="inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-[#00FF66]">
+    {!preview && <Link href="/blog" className="inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-accent">
       <ArrowLeft aria-hidden="true" className="h-3.5 w-3.5" /> <SiteText name="components.article-detail.1" /> </Link>}
     <header className="mt-8 border-b border-zinc-800 pb-8">
       <time dateTime={new Date(date).toISOString()} className="font-mono text-xs text-zinc-500">{formatDate(date)}</time>

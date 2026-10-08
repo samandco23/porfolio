@@ -1,7 +1,7 @@
 
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
-import { getPublishedProjects, getProfile, getSiteContent } from "@/lib/queries";
+import { getPublishedProjects, getProfile, getSiteContent } from "@/lib/localized-queries";
 import { ProjectsExplorer } from "./projects-explorer";
 
 export async function generateMetadata() {

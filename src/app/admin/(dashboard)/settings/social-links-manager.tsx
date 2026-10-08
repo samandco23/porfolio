@@ -69,7 +69,7 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
           return (
             <div
               key={link.id}
-              className="flex items-center gap-3 border border-zinc-800 bg-[#0a0a0a] px-4 py-3"
+              className="flex items-center gap-3 border border-zinc-800 bg-base-400 px-4 py-3"
             >
               <Icon className="h-4 w-4 shrink-0 text-zinc-500" />
               <span className="font-mono text-sm text-zinc-200">{link.label}</span>
@@ -77,7 +77,7 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-w-0 flex-1 truncate font-mono text-xs text-zinc-500 hover:text-[#00FF66]"
+                className="min-w-0 flex-1 truncate font-mono text-xs text-zinc-500 hover:text-accent"
               >
                 {link.url}
               </a>
@@ -98,7 +98,7 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
                 type="button"
                 onClick={() => toggleVisibility(link)}
                 disabled={pending}
-                className="p-1.5 text-zinc-600 hover:text-[#00FF66]"
+                className="p-1.5 text-zinc-600 hover:text-accent"
                 aria-label={`Toggle ${link.label} visibility`}
               >
                 {link.isVisible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
@@ -111,7 +111,7 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
       {/* Add new link */}
       <form
         onSubmit={handleSubmit(onCreate)}
-        className="grid gap-4 border border-zinc-800 bg-[#0a0a0a] p-5 sm:grid-cols-[1fr_2fr_auto_auto_auto]"
+        className="grid gap-4 border border-zinc-800 bg-base-400 p-5 sm:grid-cols-[1fr_2fr_auto_auto_auto]"
       >
         <Field label="Label" error={errors.label?.message}>
           <input className="input-dark" placeholder="GitHub" {...register("label")} />
@@ -137,7 +137,7 @@ export function SocialLinksManager({ socialLinks }: { socialLinks: SocialLinkRec
           </button>
         </div>
         {state.message && (
-          <p className={`font-mono text-xs sm:col-span-5 ${state.ok ? "text-[#00FF66]" : "text-red-400"}`}>
+          <p className={`font-mono text-xs sm:col-span-5 ${state.ok ? "text-accent" : "text-red-400"}`}>
             {state.ok ? "✓ " : "✗ "}
             {state.message}
           </p>

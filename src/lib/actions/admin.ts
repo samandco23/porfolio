@@ -294,7 +294,9 @@ export async function saveSiteContent(_prev: ActionState, formData: FormData): P
   const { siteContentSchema } = await import("@/lib/site-content");
   const parsed = siteContentSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return fail("Validation failed", zodFieldErrors(parsed.error));
-  await prisma.siteContent.upsert({ where: { id: "default" }, create: { id: "default", data: parsed.data }, update: { data: parsed.data } });
+  const current = await prisma.siteContent.findUnique({ where: { id: "default" } });
+  const data = { ...(current?.data && typeof current.data === "object" && !Array.isArray(current.data) ? current.data : {}), ...parsed.data };
+  await prisma.siteContent.upsert({ where: { id: "default" }, create: { id: "default", data }, update: { data } });
   refreshPublicPages();
   revalidatePath(`${getAdminPath()}/settings`);
   return ok("Public site content saved.");

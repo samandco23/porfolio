@@ -2,7 +2,7 @@
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
 import { Mail, FileDown } from "lucide-react";
-import { getProfile, getVisibleSkills, getSiteContent } from "@/lib/queries";
+import { getProfile, getVisibleSkills, getSiteContent } from "@/lib/localized-queries";
 import { SKILL_CATEGORIES } from "@/lib/constants";
 import { Markdown } from "@/components/markdown";
 import { Reveal } from "@/components/motion/reveal";
@@ -50,7 +50,7 @@ export default async function AboutPage() {
               />
             ) : (
               <div className="grid-backdrop mb-4 flex aspect-square items-center justify-center border border-zinc-800">
-                <span className="font-mono text-4xl text-[#00FF66]/70">
+                <span className="font-mono text-4xl text-accent/70">
                   {profile?.fullName?.slice(0, 1).toUpperCase() ?? "?"}
                 </span>
               </div>
@@ -65,7 +65,7 @@ export default async function AboutPage() {
               <div>
                 <dt className="text-zinc-600"> <SiteText name="app.about.page.6" /> </dt>
                 <dd className="mt-0.5">
-                  <a href={`mailto:${profile?.email}`} className="text-[#00FF66] hover:underline">
+                  <a href={`mailto:${profile?.email}`} className="text-accent hover:underline">
                     {profile?.email}
                   </a>
                 </dd>
@@ -74,7 +74,7 @@ export default async function AboutPage() {
                 <div>
                   <dt className="text-zinc-600"> <SiteText name="app.about.page.7" /> </dt>
                   <dd className="mt-0.5">
-                    <a href={`tel:${profile.phone.replace(/[^\d+]/g, "")}`} className="text-[#00FF66] hover:underline">
+                    <a href={`tel:${profile.phone.replace(/[^\d+]/g, "")}`} className="text-accent hover:underline">
                       {profile.phone}
                     </a>
                   </dd>
@@ -82,7 +82,7 @@ export default async function AboutPage() {
               )}
               <div>
                 <dt className="text-zinc-600"> <SiteText name="app.about.page.8" /> </dt>
-                <dd className={profile?.available ? "text-[#00FF66]" : "text-zinc-500"}>
+                <dd className={profile?.available ? "text-accent" : "text-zinc-500"}>
                   {profile?.available ? <SiteText name="app.about.page.11" /> : <SiteText name="app.about.page.12" />}
                 </dd>
               </div>
@@ -111,7 +111,7 @@ export default async function AboutPage() {
             return (
               <Reveal key={category} delay={0.05}>
                 <div>
-                  <h3 className="font-mono text-micro uppercase tracking-[0.18em] text-[#00FF66]">
+                  <h3 className="font-mono text-micro uppercase tracking-[0.18em] text-accent">
                     <SiteText name={`category.${category}`} />
                   </h3>
                   <div className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -123,7 +123,7 @@ export default async function AboutPage() {
                         </div>
                         {skill.level !== null && <div className="mt-1.5 h-px bg-zinc-800">
                           <div
-                            className="h-px bg-[#00FF66]/70"
+                            className="h-px bg-accent/70"
                             style={{ width: `${skill.level}%` }}
                           />
                         </div>}

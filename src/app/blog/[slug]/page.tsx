@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getProfile } from "@/lib/queries";
+import { getArticleBySlug, getProfile } from "@/lib/localized-queries";
 import { ArticleDetail } from "@/components/article-detail";
 import { ViewTracker } from "@/components/view-tracker";
 import { pageMetadata, serializeJsonLd } from "@/lib/seo";

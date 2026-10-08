@@ -31,7 +31,7 @@ export function ImageUpload({ enabled, onUploaded, label = "Upload image" }: {
   }
 
   return (
-    <div className="mt-3 space-y-2 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#00FF66]">
+    <div className="mt-3 space-y-2 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent">
       {enabled ? (
         <>
           <label htmlFor={id} className="btn-ghost cursor-pointer text-xs">
