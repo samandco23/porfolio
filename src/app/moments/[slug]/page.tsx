@@ -23,14 +23,14 @@ export default async function MomentPage({ params }: { params: Promise<{ slug: s
   const jsonLd = { "@context": "https://schema.org", "@type": "CreativeWork", name: moment.title, description: moment.description, url: new URL(`/moments/${moment.slug}`, profile?.siteUrl || getSiteUrl()).toString(), creator: profile?.fullName ? { "@type": "Person", name: profile.fullName } : undefined, image: [moment.coverUrl, ...photos.map((photo) => photo.url)].filter(Boolean) };
   return <article className="mx-auto max-w-5xl px-6 py-16 md:py-24">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
-    <Link href="/moments" className="font-mono text-xs text-zinc-500 hover:text-accent"><SiteText name="moments.back" /></Link>
+    <Link href="/moments" className="inline-flex min-h-11 items-center font-mono text-xs text-zinc-400 hover:text-accent"><SiteText name="moments.back" /></Link>
     <header className="mt-8">
       <p className="section-label"><SiteText name={`moments.kind.${moment.kind}`} /></p>
-      <h1 className="mt-3 font-mono text-3xl text-white md:text-4xl">{moment.title}</h1>
+      <h1 className="display-heading mt-5">{moment.title}</h1>
       <p className="mt-4 max-w-3xl text-lg text-zinc-400">{moment.description}</p>
-      <div className="mt-5 flex flex-wrap gap-5 font-mono text-xs text-zinc-500">{moment.date && <span className="inline-flex items-center gap-2"><CalendarDays aria-hidden="true" className="h-4 w-4" /><MomentDate date={moment.date} /></span>}{moment.location && <span className="inline-flex items-center gap-2"><MapPin aria-hidden="true" className="h-4 w-4" />{moment.location}</span>}{moment.album && <span className="text-accent">{moment.album}</span>}</div>
+      <div className="mt-5 flex flex-wrap gap-5 font-mono text-xs text-zinc-400">{moment.date && <span className="inline-flex items-center gap-2"><CalendarDays aria-hidden="true" className="h-4 w-4" /><MomentDate date={moment.date} /></span>}{moment.location && <span className="inline-flex items-center gap-2"><MapPin aria-hidden="true" className="h-4 w-4" />{moment.location}</span>}{moment.album && <span className="text-accent">{moment.album}</span>}</div>
     </header>
-    {moment.coverUrl && <Image unoptimized src={moment.coverUrl} alt={moment.title} width={1200} height={750} className="mt-10 max-h-[38rem] w-full border border-zinc-800 object-contain" />}
+    {moment.coverUrl && <Image unoptimized src={moment.coverUrl} alt={moment.title} width={1200} height={750} className="mt-10 max-h-[38rem] w-full rounded-md border border-zinc-800 object-contain" />}
     {moment.content && <div className="mt-10 max-w-3xl"><Markdown content={moment.content} /></div>}
     {photos.length > 0 && <section className="mt-14 border-t border-zinc-800 pt-8">
       <h2 className="font-mono text-xl text-white"><SiteText name="moments.photos" /></h2>

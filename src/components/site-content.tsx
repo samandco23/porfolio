@@ -37,7 +37,8 @@ export function SiteContentProvider({ content, locale: initialLocale = "fr", the
 }
 export function usePreferences() { return useContext(PreferencesContext); }
 export function useSiteContent() { return useContext(ContentContext); }
-export function SiteText({ name }: { name: string }) {
+export function SiteText({ name, stripArrow = false }: { name: string; stripArrow?: boolean }) {
   const content = useSiteContent();
-  return <>{content[name] ?? DEFAULT_SITE_CONTENT[name] ?? ""}</>;
+  const text = content[name] ?? DEFAULT_SITE_CONTENT[name] ?? "";
+  return <>{stripArrow ? text.replace(/\s*[→↗]\s*$/, "") : text}</>;
 }

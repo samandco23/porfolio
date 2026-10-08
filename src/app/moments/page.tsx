@@ -1,6 +1,7 @@
 import { getPublishedMoments, getSiteContent } from "@/lib/localized-queries";
 import { pageMetadata } from "@/lib/seo";
 import { SiteText } from "@/components/site-content";
+import { PageHeading } from "@/components/page-heading";
 import { MomentsExplorer } from "./moments-explorer";
 export async function generateMetadata() {
   const copy = await getSiteContent();
@@ -8,10 +9,8 @@ export async function generateMetadata() {
 }
 export default async function MomentsPage() {
   const moments = await getPublishedMoments();
-  return <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-    <p className="section-label">05 // <SiteText name="moments.label" /></p>
-    <h1 className="mt-2 font-mono text-3xl text-white md:text-4xl"><SiteText name="moments.title" /></h1>
-    <p className="mt-4 max-w-2xl text-zinc-400"><SiteText name="moments.intro" /></p>
+  return <div className="page-shell section-space">
+    <PageHeading label={<SiteText name="moments.label" />} title={<SiteText name="moments.title" />} description={<SiteText name="moments.intro" />} />
     <MomentsExplorer moments={moments.map(({ id, slug, title, description, kind, date, location, album, coverUrl, images }) => ({ id, slug, title, description, kind, date, location, album, coverUrl, images }))} />
   </div>;
 }

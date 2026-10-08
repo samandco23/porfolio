@@ -10,7 +10,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { getProfile as getLocalizedProfile } from "@/lib/localized-queries";
 import { readPreferences } from "@/lib/server-preferences";
 import { normalizeLocale, THEME_BOOTSTRAP } from "@/lib/preferences";
-import { getProfile, getSiteContent } from "@/lib/queries";
+import { getSiteContent } from "@/lib/queries";
 import { SiteContentProvider, SiteText } from "@/components/site-content";
 import { SITE_NAME } from "@/lib/constants";
 import { getSiteUrl } from "@/lib/site-url";
@@ -46,7 +46,7 @@ export const viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Render at request time; public data stays cached without needing a DB at build time.
   await connection();
-  const [profile, content] = await Promise.all([getProfile(), getSiteContent()]);
+  const [profile, content] = await Promise.all([getLocalizedProfile(), getSiteContent()]);
 
   const { locale, theme } = await readPreferences(normalizeLocale(content["site.language"]), content["site.theme"]);
 

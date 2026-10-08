@@ -44,10 +44,11 @@ export function ProjectsExplorer({ projects }: { projects: ExplorerProject[] }) 
         onSelect={(tag) => setActive((prev) => (prev === tag ? null : tag))}
       />
 
-      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <p className="mt-6 font-mono text-xs text-zinc-400" role="status">{filtered.length} <SiteText name="redesign.projectsCount" /></p>
+      <div className="mt-10 grid gap-x-8 gap-y-12 md:grid-cols-2">
         {filtered.map((project, i) => (
           <Reveal key={project.slug} delay={Math.min(i, 6) * 0.06}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} index={i} headingLevel={2} />
           </Reveal>
         ))}
       </div>

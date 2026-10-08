@@ -15,12 +15,14 @@ export function ContactForm() {
 
   return (
     <Reveal>
-      <form action={formAction} className="space-y-5">
+      <form action={formAction} className="space-y-6">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="name" className="label-dark"> <SiteText name="app.contact.contact-form.1" /> </label>
             <input
               id="name"
+              aria-invalid={!!state.errors?.name}
+              aria-describedby={state.errors?.name ? "name-error" : undefined}
               name="name"
               type="text"
               autoComplete="name"
@@ -29,13 +31,15 @@ export function ContactForm() {
               placeholder={content["contact.namePlaceholder"]}
             />
             {state.errors?.name && (
-              <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.name"]}</p>
+              <p id="name-error" className="mt-1 font-mono text-xs text-red-400">{content["contact.error.name"]}</p>
             )}
           </div>
           <div>
             <label htmlFor="email" className="label-dark"> <SiteText name="app.contact.contact-form.2" /> </label>
             <input
               id="email"
+              aria-invalid={!!state.errors?.email}
+              aria-describedby={state.errors?.email ? "email-error" : undefined}
               name="email"
               type="email"
               autoComplete="email"
@@ -45,7 +49,7 @@ export function ContactForm() {
               placeholder={content["contact.emailPlaceholder"]}
             />
             {state.errors?.email && (
-              <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.email"]}</p>
+              <p id="email-error" className="mt-1 font-mono text-xs text-red-400">{content["contact.error.email"]}</p>
             )}
           </div>
         </div>
@@ -66,6 +70,8 @@ export function ContactForm() {
           <label htmlFor="body" className="label-dark"> <SiteText name="app.contact.contact-form.4" /> </label>
           <textarea
             id="body"
+              aria-invalid={!!state.errors?.body}
+              aria-describedby={state.errors?.body ? "body-error" : undefined}
             name="body"
             autoComplete="off"
             required
@@ -74,7 +80,7 @@ export function ContactForm() {
             placeholder={content["contact.bodyPlaceholder"]}
           />
           {state.errors?.body && (
-            <p className="mt-1 font-mono text-xs text-red-400">{content["contact.error.body"]}</p>
+            <p id="body-error" className="mt-1 font-mono text-xs text-red-400">{content["contact.error.body"]}</p>
           )}
         </div>
 
@@ -86,7 +92,7 @@ export function ContactForm() {
 
         <div className="flex items-center gap-4">
           <button type="submit" disabled={pending} className="btn-primary">
-            <Send className="h-4 w-4" />
+            <Send aria-hidden="true" className="h-4 w-4" />
             {pending ? <SiteText name="app.contact.contact-form.6" /> : <SiteText name="app.contact.contact-form.7" />}
           </button>
           {state.message && (

@@ -20,26 +20,28 @@ export function ProjectsFilter({
   return (
     <div className="mt-8 flex flex-wrap gap-2">
       <button
+        aria-pressed={active === null}
         onClick={() => onSelect(active ?? "")}
         className={cn(
-          "border px-3 py-1 font-mono text-xs transition-colors",
+          "min-h-11 rounded-sm border px-4 py-2 font-mono text-xs transition-colors",
           active === null
             ? "border-accent/60 bg-accent/10 text-accent"
-            : "border-zinc-800 text-zinc-500 hover:text-zinc-300",
+            : "border-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200",
         )}
       > <SiteText name="app.projects.projects-filter.1" /> </button>
       {tags.map(({ tag, count }) => (
         <button
           key={tag}
+          aria-pressed={active === tag}
           onClick={() => onSelect(tag)}
           className={cn(
-            "border px-3 py-1 font-mono text-xs transition-colors",
+            "min-h-11 rounded-sm border px-4 py-2 font-mono text-xs transition-colors",
             active === tag
               ? "border-accent/60 bg-accent/10 text-accent"
-              : "border-zinc-800 text-zinc-500 hover:text-zinc-300",
+              : "border-zinc-800 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200",
           )}
         >
-          {tag} <span className="text-zinc-700">{count}</span>
+          {tag} <span className="text-zinc-400">{count}</span>
         </button>
       ))}
     </div>

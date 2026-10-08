@@ -1,7 +1,8 @@
 
 import { SiteText } from "@/components/site-content";
 import { pageMetadata } from "@/lib/seo";
-import { getPublishedProjects, getProfile, getSiteContent } from "@/lib/localized-queries";
+import { getPublishedProjects, getSiteContent } from "@/lib/localized-queries";
+import { PageHeading } from "@/components/page-heading";
 import { ProjectsExplorer } from "./projects-explorer";
 
 export async function generateMetadata() {
@@ -10,15 +11,11 @@ export async function generateMetadata() {
 }
 
 export default async function ProjectsPage() {
-  const [projects, profile] = await Promise.all([getPublishedProjects(), getProfile()]);
+  const projects = await getPublishedProjects();
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-      <p className="section-label">02 {"//"} <SiteText name="app.projects.page.1" /> </p>
-      <h1 className="mt-2 font-mono text-3xl text-white md:text-4xl"> <SiteText name="app.projects.page.2" /> </h1>
-      <p className="mt-3 max-w-2xl text-zinc-400">
-        {profile?.shortBio ?? ""}
-      </p>
+    <div className="page-shell section-space">
+      <PageHeading label={<SiteText name="app.projects.page.1" />} title={<SiteText name="app.projects.page.2" />} description={<SiteText name="redesign.projectsIntro" />} />
 
       <ProjectsExplorer
         projects={projects.map((p) => ({

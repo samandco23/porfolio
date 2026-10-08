@@ -108,9 +108,9 @@ Admin form → Zod validation (client + server) → authenticated Server Action 
 ## Notes
 
 - Public database reads use a five-minute Next.js Data Cache, invalidated after admin edits. Pages render at request time using `connection()`, so production builds do not require a reachable database. Admin reads and private previews bypass the public cache.
-- Skills levels render as hairline meters on `/about`; categories group the grid.
+- Skills levels render as hairline meters on `/about`; categories expand as native, keyboard-accessible disclosures.
 - Home shows up to three published featured projects. If none are featured, it shows the three latest published projects. Draft projects remain private.
-- Project card images load directly from their configured URLs. To enable Next.js image optimization later, configure a trusted asset host with `images.remotePatterns` and remove `unoptimized` from `ProjectCard`.
+- Project card images load directly from their configured URLs. To enable Next.js image optimization later, configure a trusted asset host with `images.remotePatterns` and remove `unoptimized` from `ProjectCover`.
 - Markdown is rendered server-side with `react-markdown` + `remark-gfm` and styled by `.prose-dark`.
 - Abuse limits are stored in PostgreSQL and shared across serverless instances. Apply the current Prisma schema before deploying schema changes.
 - View counters use a separate browser request to `/api/views`, limited to one increment per IP/content item every 30 minutes. Rendering or prefetching a page no longer writes to the database. Public counters may lag by up to five minutes; admin counters read fresh values.
@@ -258,3 +258,14 @@ Dans **Profile & Settings**, **Public site content** permet d'éditer les deux l
 La rubrique Moments propose une vue chronologique et une galerie. Une date peut être précise au jour, au mois ou à l'année, selon les informations disponibles.
 
 `npm run db:moments` ajoute ces deux fiches et leurs traductions sans réinitialiser le profil ni remplacer les événements modifiés dans le panel. La fiche SMI-CYBER ne présume aucune participation personnelle.
+
+
+## Editorial design
+
+The redesign preserves the original Inter and JetBrains Mono fonts and every light/dark color token. Its visual decisions and reference analysis are documented in `design-system/berlin-koueni/MASTER.md`.
+
+- The homepage combines an SVG identity motif, an open featured-project layout, technical expertise and real gallery photographs.
+- Project covers use administrator-supplied images; when missing or unavailable, a decorative SVG cover uses the actual title and tags.
+- Skills use native disclosures. Moments offer timeline/gallery views, kind filters and album selection.
+- New French and English headings live under `redesign.*` / `en:redesign.*` in **Settings → Public site content**. Defaults are merged on read, so no reseed or migration is needed and existing editorial changes stay intact.
+- Navigation supports Escape to dismiss its mobile menu, visible keyboard focus and comfortable touch targets. Contact fields retain their labels and link validation messages to each input.

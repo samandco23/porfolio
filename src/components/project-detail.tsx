@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Project } from "@prisma/client";
 import { ArrowLeft, ExternalLink, Github, Eye } from "lucide-react";
 import { Markdown } from "@/components/markdown";
+import { ProjectCover } from "@/components/project-cover";
 import { TagList } from "@/components/tag-list";
 import { parseProjectContent } from "@/lib/project-content";
 
@@ -21,16 +22,16 @@ export function ProjectDetail({ project, related = [], preview = false }: {
   ].filter((section) => section.content);
 
   return (
-    <article className="mx-auto max-w-4xl px-6 py-16 md:py-24">
-      {!preview && <Link href="/projects" className="inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-accent">
+    <article className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+      {!preview && <Link href="/projects" className="inline-flex min-h-11 items-center gap-2 font-mono text-xs text-zinc-400 hover:text-accent">
         <ArrowLeft aria-hidden="true" className="h-3.5 w-3.5" /> <SiteText name="components.project-detail.1" /> </Link>}
       <header className="mt-8">
         <p className="section-label">{project.year} {"//"} <SiteText name="components.project-detail.2" /> </p>
-        <h1 className="mt-2 font-mono text-3xl text-white md:text-4xl">{project.title}</h1>
+        <h1 className="display-heading mt-5">{project.title}</h1>
         <p className="mt-4 max-w-2xl text-lg text-zinc-400">{project.description}</p>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <TagList tags={project.tagList} />
-          {!preview && <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-zinc-500">
+          {!preview && <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-zinc-400">
             <Eye aria-hidden="true" className="h-3.5 w-3.5" /> {project.views} <SiteText name="components.project-detail.3" /> </span>}
         </div>
         {(project.repoUrl || project.demoUrl) && <div className="mt-8 flex flex-wrap gap-4">
@@ -40,10 +41,7 @@ export function ProjectDetail({ project, related = [], preview = false }: {
             <ExternalLink aria-hidden="true" className="h-4 w-4" /> <SiteText name="components.project-detail.5" /> </a>}
         </div>}
       </header>
-      {project.imageUrl && <div className="mt-12 border border-zinc-800">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={project.imageUrl} alt={project.title} width={1200} height={675} loading="lazy" className="aspect-video w-full object-cover" />
-      </div>}
+      <div className="mt-12"><ProjectCover title={project.title} slug={project.slug} imageUrl={project.imageUrl} tags={project.tagList} /></div>
       {sections.length > 0 && <div className="mt-12 border-t border-zinc-800">
         {sections.map((section, index) => <section key={section.key} className="grid gap-5 border-b border-zinc-800 py-8 sm:grid-cols-[180px_1fr]">
           <h2 className="font-mono text-base text-white"><span className="mr-3 text-accent">0{index + 1}</span><SiteText name={section.key} /></h2>
@@ -58,17 +56,17 @@ export function ProjectDetail({ project, related = [], preview = false }: {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt={`${project.title} — screenshot ${index + 1}`} width={960} height={600} loading="lazy" className="aspect-[8/5] w-full object-contain bg-black" />
             </a>
-            <figcaption className="mt-2 font-mono text-xs text-zinc-500"> <SiteText name="components.project-detail.7" /> {index + 1} <SiteText name="components.project-detail.8" /> </figcaption>
+            <figcaption className="mt-2 font-mono text-xs text-zinc-400"> <SiteText name="components.project-detail.7" /> {index + 1} <SiteText name="components.project-detail.8" /> </figcaption>
           </figure>)}
         </div>
       </section>}
-      {content && <div className="mt-12 border-t border-zinc-800 pt-10"><Markdown content={content} /></div>}
+      {content && <div className="mt-12 max-w-3xl border-t border-zinc-800 pt-10"><Markdown content={content} /></div>}
       {related.length > 0 && <section className="mt-20 border-t border-zinc-800 pt-10">
         <h2 className="section-label"> <SiteText name="components.project-detail.9" /> </h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {related.map((item) => <Link key={item.id} href={`/projects/${item.slug}`} className="group border border-zinc-800 bg-base-400 p-5 transition-colors hover:border-accent/50">
             <h3 className="font-mono text-sm text-zinc-200 group-hover:text-accent">{item.title}</h3>
-            <p className="mt-2 text-xs leading-relaxed text-zinc-500 line-clamp-2">{item.description}</p>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-400 line-clamp-2">{item.description}</p>
           </Link>)}
         </div>
       </section>}

@@ -96,7 +96,7 @@ export const getPublishedArticleSlugs = publicCache("article-sitemap", async () 
   return rows.map((r) => ({ slug: r.slug, updatedAt: r.updatedAt }));
 });
 
-export const getSiteContent = publicCache("site-content-v1", async () => {
+export const getSiteContent = publicCache("site-content-v2", async () => {
   const { resolveSiteContent } = await import("@/lib/site-content");
   const row = await prisma.siteContent.findUnique({ where: { id: "default" } });
   const copy = resolveSiteContent(row?.data);
